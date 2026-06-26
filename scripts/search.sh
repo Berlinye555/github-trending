@@ -65,43 +65,47 @@ search() {
     return
   fi
 
-  # 逐 repo 解析（用 "full_name" 分割，避免嵌套对象字段干扰）
-  local idx=0
-  echo "$result" | sed 's/"full_name":/\n"full_name":/g' | tail -n +2 | head -5 | while IFS= read -r repo; do
-    # 移掉 owner 嵌套对象（避免其 html_url 等字段干扰匹配）
-    local clean_repo
-    clean_repo=$(echo "$repo" | sed 's/"owner":{[^}]*},//')
+  # 先整体清理：移掉所有 owner 嵌套对象（避免其 html_url 干扰匹配）
+  local clean
+  clean=$(echo "$result" | sed 's/"owner":{[^}]*},//g')
 
+  # 逐 repo 按索引提取（每个 repo 的字段在全局中按相同顺序排列）
+  local i=1
+  while [ "$i" -le 5 ]; do
     local name star desc_text lang_text date_text link
-    # full_name（只有一个）
-    name=$(echo "$clean_repo" | grep -o '"full_name": *"[^"]*"' | head -1 | sed 's/.*"full_name": *"\([^"]*\)".*/\1/')
-    # stargazers_count
-    star=$(echo "$clean_repo" | grep -o '"stargazers_count": *[0-9]*' | head -1 | grep -o '[0-9]*')
-    # description（可能是 null）
-    desc_text=$(echo "$clean_repo" | grep -o '"description": *\(null\|"[^"]*"\)' | head -1)
+
+    name=$(echo "$clean" | grep -o '"full_name": *"[^"]*"' | sed -n "${i}p" | sed 's/.*"full_name": *"//;s/"$//')
+    [ -z "$name" ] && break
+
+    star=$(echo "$clean" | grep -o '"stargazers_count": *[0-9]*' | sed -n "${i}p" | grep -o '[0-9]*')
+
+    # description（可能是 "... " 或 null）
+    desc_text=$(echo "$clean" | grep -o '"description": *\(null\|"[^"]*"\)' | sed -n "${i}p")
     if echo "$desc_text" | grep -q 'null'; then
       desc_text="-"
     else
-      desc_text=$(echo "$desc_text" | sed 's/.*"description": *"\([^"]*\)".*/\1/' | sed 's/\\n/ /g' | cut -c1-60)
+      desc_text=$(echo "$desc_text" | sed 's/.*"description": *"//;s/"$//' | sed 's/\\n/ /g' | cut -c1-60)
     fi
-    # language（可能是 null）
-    lang_text=$(echo "$clean_repo" | grep -o '"language": *\(null\|"[^"]*"\)' | head -1)
+
+    # language（可能是 "... " 或 null）
+    lang_text=$(echo "$clean" | grep -o '"language": *\(null\|"[^"]*"\)' | sed -n "${i}p")
     if echo "$lang_text" | grep -q 'null'; then
       lang_text="-"
     else
-      lang_text=$(echo "$lang_text" | sed 's/.*"language": *"\([^"]*\)".*/\1/')
+      lang_text=$(echo "$lang_text" | sed 's/.*"language": *"//;s/"$//')
     fi
-    # updated_at
-    date_text=$(echo "$clean_repo" | grep -o '"updated_at": *"[^"]*"' | head -1 | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' | head -1)
-    # html_url（已移除 owner，只剩 repo 自己的）
-    link=$(echo "$clean_repo" | grep -o '"html_url": *"[^"]*"' | head -1 | sed 's/.*"html_url": *"\([^"]*\)".*/\1/')
+
+    date_text=$(echo "$clean" | grep -o '"updated_at": *"[^"]*"' | sed -n "${i}p" | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' | head -1)
+    link=$(echo "$clean" | grep -o '"html_url": *"[^"]*"' | sed -n "${i}p" | sed 's/.*"html_url": *"//;s/"$//')
 
     [ -z "$star" ] && star="-"
     [ -z "$desc_text" ] && desc_text="-"
     [ -z "$lang_text" ] && lang_text="-"
     [ -z "$date_text" ] && date_text="-"
     echo "| ${star} | [${name}](${link}) | ${desc_text} | ${lang_text} | ${date_text} |"
-  done || true
+
+    i=$((i + 1))
+  done
 
   echo ""
 }
