@@ -23,7 +23,7 @@ jobs:
           ENABLE_AI_DESCRIPTION_REWRITE: ${{ secrets.OPENAI_API_KEY != '' && 'true' || 'false' }}
         run: |
           chmod +x scripts/search.py
-          python3 scripts/search.py > README.md
+          python3 scripts/search.py README.md
 
       - name: Commit & push
         run: |

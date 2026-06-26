@@ -55,15 +55,38 @@ def fetch_search(query: str) -> dict:
         return {"error": str(exc.reason), "status": None}
 
 
+def fallback_chinese_description(name: str, description: str | None, language: str | None) -> str:
+    original = sanitize_text(description)
+    if original != "-":
+        lowered = original.lower()
+        if not re.search(r"[\u4e00-\u9fff]", original):
+            if "agent" in lowered:
+                return f"面向智能体与自动化场景的{sanitize_text(language) or '项目'}"
+            if "framework" in lowered:
+                return f"提供{sanitize_text(language) or '开发'}框架能力的项目"
+            if "tool" in lowered:
+                return f"实用的{sanitize_text(language) or '开发'}工具项目"
+            if "trading" in lowered or "finance" in lowered or "quant" in lowered:
+                return f"面向量化与金融分析的{sanitize_text(language) or '项目'}"
+            if "api" in lowered:
+                return f"提供接口与数据能力的{sanitize_text(language) or '项目'}"
+            if "llm" in lowered or "model" in lowered:
+                return f"围绕大模型与 AI 能力的{sanitize_text(language) or '项目'}"
+            return f"{sanitize_text(language) or '开源'}项目"
+        return original
+
+    return f"{sanitize_text(language) or '开源'}项目"
+
+
 def rewrite_description(name: str, description: str | None, language: str | None) -> str:
     original = sanitize_text(description)
     if original == "-":
         return "-"
     if os.getenv("ENABLE_AI_DESCRIPTION_REWRITE", "").lower() not in {"1", "true", "yes", "on"}:
-        return original
+        return fallback_chinese_description(name, original, language)
     api_key = os.getenv("OPENAI_API_KEY", "")
     if not api_key:
-        return original
+        return fallback_chinese_description(name, original, language)
 
     base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
@@ -72,7 +95,7 @@ def rewrite_description(name: str, description: str | None, language: str | None
         "messages": [
             {
                 "role": "system",
-                "content": "You rewrite GitHub repository descriptions for a README table. Keep it short, polished, and factual. Return only one concise sentence in English.",
+                "content": "You rewrite GitHub repository descriptions for a README table. Keep it short, polished, and factual. Return only one concise sentence in Chinese.",
             },
             {
                 "role": "user",
@@ -98,9 +121,9 @@ def rewrite_description(name: str, description: str | None, language: str | None
             data = json.loads(response.read().decode("utf-8"))
             content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
             cleaned = sanitize_text(content)
-            return cleaned[:80] if cleaned else original
+            return cleaned[:80] if cleaned else fallback_chinese_description(name, original, language)
     except Exception:
-        return original
+        return fallback_chinese_description(name, original, language)
 
 
 def format_repo_row(repo: dict) -> str:
@@ -121,7 +144,7 @@ def render_section(label: str, query: str) -> str:
     lines = []
     lines.append(f"## {label}")
     lines.append("")
-    lines.append("| ⭐ | 项目 | 描述 | 语言 | 更新 |")
+    lines.append("| ⭐ | 项目链接 | 描述 | 语言 | 更新 |")
     lines.append("|---|---:|---|---|---|")
     lines.append(f"<!-- DEBUG {label}: query={urllib.parse.quote_plus(query)} -->")
 
