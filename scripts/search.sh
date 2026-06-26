@@ -2,7 +2,7 @@
 # GitHub Trending Repos Collector
 # 根据 Alpha矿长 的兴趣方向定时搜索最新热门项目
 
-set -euo pipefail
+set -euo
 
 TODAY=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')
 STARS_THRESHOLD=20
@@ -35,7 +35,7 @@ search() {
   local result
   result=$(curl -s -H "Authorization: Bearer ${TOKEN}" \
     -H "Accept: application/vnd.github+json" \
-    "https://api.github.com/search/repositories?q=${encoded}&sort=stars&order=desc&per_page=5" 2>/dev/null)
+    "https://api.github.com/search/repositories?q=${encoded}&sort=stars&order=desc&per_page=5" 2>/dev/null) || true
 
   # DEBUG: 输出原始响应（仅首次调试用，后续可删除）
   echo "<!-- DEBUG ${label}: query=${encoded} -->"
@@ -64,22 +64,32 @@ search() {
     return
   fi
 
-  # 提取每个 repo 的字段（注意 GitHub JSON 冒号后有空格）
-  echo "$result" | grep -o '"full_name": *"[^"]*"\|"stargazers_count": *[0-9]*\|"description": *"[^"]*"\|"language": *"[^"]*"\|"updated_at": *"[^"]*"\|"html_url": *"[^"]*"' \
+  # 提取每个 repo 的字段（description/language 可能为 null）
+  echo "$result" | grep -o '"full_name": *"[^"]*"\|"stargazers_count": *[0-9]*\|"description": *\(null\|"[^"]*"\)\|"language": *\(null\|"[^"]*"\)\|"updated_at": *"[^"]*"\|"html_url": *"[^"]*"' \
     | paste - - - - - - 2>/dev/null \
     | head -5 \
     | while IFS=$'\t' read -r full_name stars desc lang updated url; do
       local name star desc_text lang_text date_text link
       name=$(echo "$full_name" | sed 's/.*"full_name": *"\([^"]*\)".*/\1/')
       star=$(echo "$stars" | grep -o '[0-9]*')
-      desc_text=$(echo "$desc" | sed 's/.*"description": *"\([^"]*\)".*/\1/' | sed 's/\\n/ /g' | cut -c1-60)
-      lang_text=$(echo "$lang" | sed 's/.*"language": *"\([^"]*\)".*/\1/')
+      # 解析 description（可能是 "..." 或 null）
+      if echo "$desc" | grep -q '"description": null'; then
+        desc_text=""
+      else
+        desc_text=$(echo "$desc" | sed 's/.*"description": *"\([^"]*\)".*/\1/' | sed 's/\\n/ /g' | cut -c1-60)
+      fi
+      # 解析 language（可能是 "..." 或 null）
+      if echo "$lang" | grep -q '"language": null'; then
+        lang_text=""
+      else
+        lang_text=$(echo "$lang" | sed 's/.*"language": *"\([^"]*\)".*/\1/')
+      fi
       date_text=$(echo "$updated" | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' | head -1)
       link=$(echo "$url" | sed 's/.*"html_url": *"\([^"]*\)".*/\1/')
       [ -z "$desc_text" ] && desc_text="-"
       [ -z "$lang_text" ] && lang_text="-"
       echo "| ${star} | [${name}](${link}) | ${desc_text} | ${lang_text} | ${date_text} |"
-    done
+    done || true
 
   echo ""
 }
