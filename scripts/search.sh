@@ -38,7 +38,7 @@ search() {
     "https://api.github.com/search/repositories?q=${encoded}&sort=stars&order=desc&per_page=5" 2>/dev/null)
 
   # DEBUG: 输出原始响应（仅首次调试用，后续可删除）
-  echo "<!-- DEBUG ${label}: total=$(echo "$result" | grep -o '"total_count":[0-9]*' | head -1) -->"
+  echo "<!-- DEBUG ${label}: query=${encoded} -->"
 
   # 检查是否被限流
   if echo "$result" | grep -q '"message".*"API rate limit"'; then
@@ -56,7 +56,7 @@ search() {
 
   # 解析 JSON 输出表格行（不依赖 jq）
   local count
-  count=$(echo "$result" | grep -o '"total_count":[0-9]*' | head -1 | grep -o '[0-9]*')
+  count=$(echo "$result" | grep -o '"total_count": *[0-9]*' | head -1 | grep -o '[0-9]*')
 
   if [ -z "$count" ] || [ "$count" = "0" ]; then
     echo "| - | 暂无匹配结果 | 换个关键词试试 | - | - |"
@@ -64,18 +64,18 @@ search() {
     return
   fi
 
-  # 提取每个 repo 的字段
-  echo "$result" | grep -o '"full_name":"[^"]*"\|"stargazers_count":[0-9]*\|"description":"[^"]*"\|"language":"[^"]*"\|"updated_at":"[^"]*"\|"html_url":"[^"]*"' \
+  # 提取每个 repo 的字段（注意 GitHub JSON 冒号后有空格）
+  echo "$result" | grep -o '"full_name": *"[^"]*"\|"stargazers_count": *[0-9]*\|"description": *"[^"]*"\|"language": *"[^"]*"\|"updated_at": *"[^"]*"\|"html_url": *"[^"]*"' \
     | paste - - - - - - 2>/dev/null \
     | head -5 \
     | while IFS=$'\t' read -r full_name stars desc lang updated url; do
       local name star desc_text lang_text date_text link
-      name=$(echo "$full_name" | sed 's/.*"full_name":"\([^"]*\)".*/\1/')
+      name=$(echo "$full_name" | sed 's/.*"full_name": *"\([^"]*\)".*/\1/')
       star=$(echo "$stars" | grep -o '[0-9]*')
-      desc_text=$(echo "$desc" | sed 's/.*"description":"\([^"]*\)".*/\1/' | sed 's/\\n/ /g' | cut -c1-60)
-      lang_text=$(echo "$lang" | sed 's/.*"language":"\([^"]*\)".*/\1/')
+      desc_text=$(echo "$desc" | sed 's/.*"description": *"\([^"]*\)".*/\1/' | sed 's/\\n/ /g' | cut -c1-60)
+      lang_text=$(echo "$lang" | sed 's/.*"language": *"\([^"]*\)".*/\1/')
       date_text=$(echo "$updated" | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' | head -1)
-      link=$(echo "$url" | sed 's/.*"html_url":"\([^"]*\)".*/\1/')
+      link=$(echo "$url" | sed 's/.*"html_url": *"\([^"]*\)".*/\1/')
       [ -z "$desc_text" ] && desc_text="-"
       [ -z "$lang_text" ] && lang_text="-"
       echo "| ${star} | [${name}](${link}) | ${desc_text} | ${lang_text} | ${date_text} |"
