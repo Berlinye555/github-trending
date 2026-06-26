@@ -48,7 +48,7 @@ def escape_markdown(value: str | None) -> str:
 
 def fetch_search(query: str) -> dict:
     encoded_query = urllib.parse.quote_plus(query)
-    url = f"https://api.github.com/search/repositories?q={encoded_query}&sort=stars&order=desc&per_page=5"
+    url = f"https://api.github.com/search/repositories?q={encoded_query}&sort=stars&order=desc&per_page=30"
     headers = {
         "Accept": "application/vnd.github+json",
         "User-Agent": "workflows-trending/1.0",
@@ -238,33 +238,27 @@ def repo_to_entry(repo: dict) -> dict:
 SECTION_DEFS = [
     (
         "\U0001f916 AI / Agent 项目",
-        "ai agent OR llm framework language:python",
-        ">50",
-        "30天",
+        "ai agent OR llm framework",
+        ">10",
+        "不限",
     ),
     (
         "\U0001f30f 中文项目热点",
-        "人工智能 OR 开源项目 OR 大模型",
-        ">20",
-        "30天",
+        "人工智能 OR 开源项目 OR 大模型 OR 智能",
+        ">5",
+        "不限",
     ),
     (
         "\U0001f4f9 量化交易与金融",
-        "trading OR finance OR quant language:python NOT awesome",
-        ">10",
-        "60天",
+        "trading OR finance OR quant",
+        ">5",
+        "不限",
     ),
     (
         "\U0001f6e0️ 开发者工具",
-        "cli OR dev tool language:python NOT awesome",
-        ">20",
-        "30天",
-    ),
-    (
-        "\U0001f195 本月热门",
-        "stars:>100",
-        ">100",
-        "30天",
+        "cli OR dev tool",
+        ">10",
+        "不限",
     ),
 ]
 
@@ -273,14 +267,9 @@ def search_and_append(db: dict) -> dict:
     """搜索 API 并将新项目追加到数据库，返回新增统计"""
     stats: dict[str, int] = {}
     existing = get_existing_names(db)
-    thirty_days = days_ago(30)
-    sixty_days = days_ago(60)
 
-    time_ranges = [thirty_days, thirty_days, sixty_days, thirty_days, thirty_days]
-
-    for idx, (label, base_query, stars_threshold, _time_label) in enumerate(SECTION_DEFS):
-        time_filter = time_ranges[idx]
-        query = f"{base_query} pushed:>{time_filter} stars:{stars_threshold}"
+    for label, base_query, stars_threshold, _time_label in SECTION_DEFS:
+        query = f"{base_query} stars:{stars_threshold}"
 
         result = fetch_search(query)
         items = result.get("items") or []
@@ -338,24 +327,22 @@ def render_readme(db: dict) -> str:
     L_ZH = "\U0001f30f 中文项目热点"
     L_TRADE = "\U0001f4f9 量化交易与金融"
     L_TOOL = "\U0001f6e0️ 开发者工具"
-    L_HOT = "\U0001f195 本月热门"
 
     lines = [
         "# \U0001f525 GitHub 热门项目日报",
         "",
         f"> 更新时间：{today} CST",
-        "> 关注方向：AI / Agent · 中文热点 · 量化交易 · 开发者工具 · 本月热门",
-        f"> 数据范围：{days_ago(60)} ~ {today}",
+        "> 关注方向：AI / Agent · 中文热点 · 量化交易 · 开发者工具",
+        f"> 数据范围：不限时间 · 不限语言 · 按 Stars 排序",
         "",
         "## \U0001f4cb 项目总览",
         "",
         "| 分类 | 说明 | 搜索关键词 | Stars | 时间 | 已收录 |",
         "|------|------|-----------|-------|------|------|",
-        f"| {L_AI} | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >50 | 30天 | {len(cats.get(L_AI, []))} |",
-        f"| {L_ZH} | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 | >20 | 30天 | {len(cats.get(L_ZH, []))} |",
-        f"| {L_TRADE} | 量化策略、金融数据、回测 | trading OR finance OR quant | >10 | 60天 | {len(cats.get(L_TRADE, []))} |",
-        f"| {L_TOOL} | CLI、效率工具、开发辅助 | cli OR dev tool | >20 | 30天 | {len(cats.get(L_TOOL, []))} |",
-        f"| {L_HOT} | 30天内活跃的历史高星项目 | stars:>100 | >100 | 30天 | {len(cats.get(L_HOT, []))} |",
+        f"| {L_AI} | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | {len(cats.get(L_AI, []))} |",
+        f"| {L_ZH} | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | {len(cats.get(L_ZH, []))} |",
+        f"| {L_TRADE} | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | {len(cats.get(L_TRADE, []))} |",
+        f"| {L_TOOL} | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | {len(cats.get(L_TOOL, []))} |",
         "",
         "---",
         "",
