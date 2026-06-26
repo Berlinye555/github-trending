@@ -16,8 +16,9 @@ jobs:
 
       - name: Search trending repos
         env:
-          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
+          chmod +x scripts/search.sh
           bash scripts/search.sh > README.md
 
       - name: Commit & push
