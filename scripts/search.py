@@ -218,6 +218,45 @@ def get_existing_names(db: dict) -> set[str]:
     return names
 
 
+# ── 相关性过滤 ──
+
+def is_relevant(label: str, full_name: str, description: str | None, topics: list[str] | None) -> bool:
+    """检查项目是否与分类相关，过滤 GitHub 搜索的噪音结果"""
+    text = f"{full_name or ''} {description or ''} {' '.join(topics or [])}".lower()
+
+    if "AI / Agent" in label:
+        strong = ["llm", "langchain", "autogen", "chatgpt", "rag",
+                  "copilot", "chatbot", "crewai", "haystack",
+                  "agentic", "multi-agent", "openai", "gpt-",
+                  "ai-", "ai.", "gpt "]
+        weak = ["ai ", "agent"]
+        has_strong = any(w in text for w in strong)
+        has_weak = sum(1 for w in weak if w in text)
+        return has_strong or has_weak >= 2
+    if "量化" in label:
+        strong = ["trading", "backtest", "freqtrade", "openbb",
+                  "crypto trading", "cryptocurrency", "exchange",
+                  "binance", "stock market", "broker", "quantitative",
+                  "algorithmic trading", "fintech"]
+        weak = ["quant", "finance", "stock", "trade", "crypto",
+                "invest", "market", "option"]
+        has_strong = any(w in text for w in strong)
+        has_weak = sum(1 for w in weak if w in text)
+        return has_strong or has_weak >= 2
+    if "开发者工具" in label:
+        strong = ["cli ", "cli/", "-cli", "devtool", "terminal", "tui",
+                  "command-line", "command line", "debug", "workflow",
+                  "pipeline", "warp ", "curl", "zsh", "bash"]
+        weak = ["tool", "dev ", "utility", "automation", "plugin"]
+        has_strong = any(w in text for w in strong)
+        has_weak = sum(1 for w in weak if w in text)
+        return has_strong or has_weak >= 2
+    if "中文" in label:
+        return bool(re.search(r"[一-鿿]", text))
+
+    return True
+
+
 def repo_to_entry(repo: dict) -> dict:
     """将 API 返回的 repo 对象转为存储条目"""
     name = repo.get("full_name") or "-"
@@ -294,6 +333,10 @@ def search_and_append(db: dict) -> dict:
             if any(e.get("full_name") == name for e in category_list):
                 continue
 
+            # 相关性过滤：剔除搜索噪音
+            if not is_relevant(label, name, repo.get("description"), repo.get("topics")):
+                continue
+
             entry = repo_to_entry(repo)
             category_list.append(entry)
             existing.add(name)
@@ -329,15 +372,9 @@ def render_readme(db: dict) -> str:
     L_TOOL = "\U0001f6e0️ 开发者工具"
 
     lines = [
-        "# \U0001f525 GitHub 热门项目日报 — AI · 量化 · 工具 · 中文开源",
+        "# \U0001f525 GitHub 热门项目日报",
         "",
-        "> \U0001f4e1 GitHub 热门开源项目每日速递，自动发现优质 AI 智能体、LLM 框架、量化交易、",
-        "> 开发者工具、中文开源项目。按 Stars 排序，附中文描述。",
-        "> *Daily trending GitHub repos: AI agents, LLM frameworks, quant trading,",
-        "> dev tools, Chinese open-source projects. Ranked by stars with Chinese descriptions.*",
-        "",
-        f"> \U0001f552 更新时间：{today} CST",
-        f"> \U0001f4ca 数据范围：不限时间 · 不限语言 · 按 Stars 排序",
+        f"> \U0001f552 更新：{today} CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序",
         "",
         "## \U0001f4cb 项目总览",
         "",
@@ -370,11 +407,7 @@ def render_readme(db: dict) -> str:
     repo_full = os.getenv("GITHUB_REPOSITORY", "your-org/your-repo")
     lines.append("---")
     lines.append("")
-    lines.append(f"> \U0001f916 由 [GitHub Actions](https://github.com/{repo_full}/actions) 每日自动更新")
-    lines.append("> \U0001f4e1 数据来源：[GitHub Search API](https://docs.github.com/en/rest/search)")
-    lines.append("")
-    lines.append("> \U0001f50d 关键词：`GitHub热门` `AI智能体` `LLM框架` `量化交易` `开发者工具` `中文开源` "
-                "`GitHub Trending` `AI Agent` `Quant` `DevTools` `Open Source`")
+    lines.append(f"> \U0001f916 每日自动更新 · 数据来源 [GitHub Search API](https://docs.github.com/en/rest/search)")
 
     return "\n".join(lines)
 
