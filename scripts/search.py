@@ -329,11 +329,15 @@ def render_readme(db: dict) -> str:
     L_TOOL = "\U0001f6e0️ 开发者工具"
 
     lines = [
-        "# \U0001f525 GitHub 热门项目日报",
+        "# \U0001f525 GitHub 热门项目日报 — AI · 量化 · 工具 · 中文开源",
         "",
-        f"> 更新时间：{today} CST",
-        "> 关注方向：AI / Agent · 中文热点 · 量化交易 · 开发者工具",
-        f"> 数据范围：不限时间 · 不限语言 · 按 Stars 排序",
+        "> \U0001f4e1 GitHub 热门开源项目每日速递，自动发现优质 AI 智能体、LLM 框架、量化交易、",
+        "> 开发者工具、中文开源项目。按 Stars 排序，附中文描述。",
+        "> *Daily trending GitHub repos: AI agents, LLM frameworks, quant trading,",
+        "> dev tools, Chinese open-source projects. Ranked by stars with Chinese descriptions.*",
+        "",
+        f"> \U0001f552 更新时间：{today} CST",
+        f"> \U0001f4ca 数据范围：不限时间 · 不限语言 · 按 Stars 排序",
         "",
         "## \U0001f4cb 项目总览",
         "",
@@ -368,6 +372,9 @@ def render_readme(db: dict) -> str:
     lines.append("")
     lines.append(f"> \U0001f916 由 [GitHub Actions](https://github.com/{repo_full}/actions) 每日自动更新")
     lines.append("> \U0001f4e1 数据来源：[GitHub Search API](https://docs.github.com/en/rest/search)")
+    lines.append("")
+    lines.append("> \U0001f50d 关键词：`GitHub热门` `AI智能体` `LLM框架` `量化交易` `开发者工具` `中文开源` "
+                "`GitHub Trending` `AI Agent` `Quant` `DevTools` `Open Source`")
 
     return "\n".join(lines)
 

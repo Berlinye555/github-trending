@@ -1,8 +1,12 @@
-# 🔥 GitHub 热门项目日报
+# 🔥 GitHub 热门项目日报 — AI · 量化 · 工具 · 中文开源
 
-> 更新时间：2026-06-26 18:20 CST
-> 关注方向：AI / Agent · 中文热点 · 量化交易 · 开发者工具
-> 数据范围：不限时间 · 不限语言 · 按 Stars 排序
+> 📡 GitHub 热门开源项目每日速递，自动发现优质 AI 智能体、LLM 框架、量化交易、
+> 开发者工具、中文开源项目。按 Stars 排序，附中文描述。
+> *Daily trending GitHub repos: AI agents, LLM frameworks, quant trading,
+> dev tools, Chinese open-source projects. Ranked by stars with Chinese descriptions.*
+
+> 🕒 更新时间：2026-06-26 18:25 CST
+> 📊 数据范围：不限时间 · 不限语言 · 按 Stars 排序
 
 ## 📋 项目总览
 
@@ -156,3 +160,5 @@
 
 > 🤖 由 [GitHub Actions](https://github.com/your-org/your-repo/actions) 每日自动更新
 > 📡 数据来源：[GitHub Search API](https://docs.github.com/en/rest/search)
+
+> 🔍 关键词：`GitHub热门` `AI智能体` `LLM框架` `量化交易` `开发者工具` `中文开源` `GitHub Trending` `AI Agent` `Quant` `DevTools` `Open Source`
