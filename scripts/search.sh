@@ -67,7 +67,7 @@ search() {
 
   # 逐 repo 解析（用 "full_name" 分割，避免嵌套对象字段干扰）
   local idx=0
-  echo "$result" | sed 's/{"full_name"/\n{"full_name"/g' | tail -n +2 | head -5 | while IFS= read -r repo; do
+  echo "$result" | sed 's/"full_name":/\n"full_name":/g' | tail -n +2 | head -5 | while IFS= read -r repo; do
     # 移掉 owner 嵌套对象（避免其 html_url 等字段干扰匹配）
     local clean_repo
     clean_repo=$(echo "$repo" | sed 's/"owner":{[^}]*},//')
