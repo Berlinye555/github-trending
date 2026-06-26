@@ -67,7 +67,7 @@ search() {
 
   # 先整体清理：移掉所有 owner 嵌套对象（避免其 html_url 干扰匹配）
   local clean
-  clean=$(echo "$result" | sed 's/"owner":{[^}]*},//g')
+  clean=$(echo "$result" | sed 's/"owner": *{[^}]*},//g')
 
   # 逐 repo 按索引提取（每个 repo 的字段在全局中按相同顺序排列）
   local i=1
