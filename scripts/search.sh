@@ -77,22 +77,22 @@ search() {
 # ── 按用户兴趣维度搜索 ──
 
 search "🤖 AI 应用开发" \
-  "topic:machine-learning language:python pushed:>$(date -d '30 days ago' +%Y-%m-%d) stars:>${STARS_THRESHOLD}"
+  "ai agent language:python pushed:>$(date -d '30 days ago' +%Y-%m-%d) stars:>${STARS_THRESHOLD}"
 
 search "🧠 LLM / Agent 框架" \
-  "llm agent framework language:python pushed:>$(date -d '30 days ago' +%Y-%m-%d) stars:>${STARS_THRESHOLD}"
+  "llm OR agent framework language:python pushed:>$(date -d '30 days ago' +%Y-%m-%d) stars:>50"
 
 search "💹 量化交易 / 金融" \
-  "trading finance language:python pushed:>$(date -d '60 days ago' +%Y-%m-%d) stars:>${STARS_THRESHOLD}"
+  "trading OR finance OR quant language:python pushed:>$(date -d '60 days ago' +%Y-%m-%d) stars:>10"
 
 search "🔧 CLI / 系统工具" \
-  "cli tool language:python pushed:>$(date -d '30 days ago' +%Y-%m-%d) stars:>${STARS_THRESHOLD}"
+  "cli OR tool language:python pushed:>$(date -d '30 days ago' +%Y-%m-%d) stars:>${STARS_THRESHOLD}"
 
 search "🆕 本周新星" \
-  "created:>$(date -d '7 days ago' +%Y-%m-%d) stars:>10"
+  "created:>$(date -d '7 days ago' +%Y-%m-%d)"
 
 search "🔥 本月热门（中文）" \
-  "language:chinese pushed:>$(date -d '30 days ago' +%Y-%m-%d) stars:>${STARS_THRESHOLD}"
+  "pushed:>$(date -d '30 days ago' +%Y-%m-%d) stars:>${STARS_THRESHOLD}"
 
 cat <<EOF
 
