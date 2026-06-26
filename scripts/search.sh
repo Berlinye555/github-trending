@@ -65,22 +65,18 @@ search() {
     return
   fi
 
-  # 先整体清理：移掉所有 owner 嵌套对象（避免其 html_url 干扰匹配）
-  local clean
-  clean=$(echo "$result" | sed 's/"owner": *{[^}]*},//g')
-
-  # 逐 repo 按索引提取（每个 repo 的字段在全局中按相同顺序排列）
+  # 逐 repo 按索引提取（每个 repo 的字段在全局中出现次数相同）
   local i=1
   while [ "$i" -le 5 ]; do
-    local name star desc_text lang_text date_text link
+    local name star desc_text lang_text date_text
 
-    name=$(echo "$clean" | grep -o '"full_name": *"[^"]*"' | sed -n "${i}p" | sed 's/.*"full_name": *"//;s/"$//')
+    name=$(echo "$result" | grep -o '"full_name": *"[^"]*"' | sed -n "${i}p" | sed 's/.*"full_name": *"//;s/"$//')
     [ -z "$name" ] && break
 
-    star=$(echo "$clean" | grep -o '"stargazers_count": *[0-9]*' | sed -n "${i}p" | grep -o '[0-9]*')
+    star=$(echo "$result" | grep -o '"stargazers_count": *[0-9]*' | sed -n "${i}p" | grep -o '[0-9]*')
 
     # description（可能是 "... " 或 null）
-    desc_text=$(echo "$clean" | grep -o '"description": *\(null\|"[^"]*"\)' | sed -n "${i}p")
+    desc_text=$(echo "$result" | grep -o '"description": *\(null\|"[^"]*"\)' | sed -n "${i}p")
     if echo "$desc_text" | grep -q 'null'; then
       desc_text="-"
     else
@@ -88,15 +84,16 @@ search() {
     fi
 
     # language（可能是 "... " 或 null）
-    lang_text=$(echo "$clean" | grep -o '"language": *\(null\|"[^"]*"\)' | sed -n "${i}p")
+    lang_text=$(echo "$result" | grep -o '"language": *\(null\|"[^"]*"\)' | sed -n "${i}p")
     if echo "$lang_text" | grep -q 'null'; then
       lang_text="-"
     else
       lang_text=$(echo "$lang_text" | sed 's/.*"language": *"//;s/"$//')
     fi
 
-    date_text=$(echo "$clean" | grep -o '"updated_at": *"[^"]*"' | sed -n "${i}p" | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' | head -1)
-    link=$(echo "$clean" | grep -o '"html_url": *"[^"]*"' | sed -n "${i}p" | sed 's/.*"html_url": *"//;s/"$//')
+    date_text=$(echo "$result" | grep -o '"updated_at": *"[^"]*"' | sed -n "${i}p" | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' | head -1)
+    # 直接由 full_name 拼链接，避免 owner.html_url 干扰
+    local link="https://github.com/${name}"
 
     [ -z "$star" ] && star="-"
     [ -z "$desc_text" ] && desc_text="-"
