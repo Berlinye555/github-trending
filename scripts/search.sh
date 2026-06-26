@@ -37,9 +37,19 @@ search() {
     -H "Accept: application/vnd.github+json" \
     "https://api.github.com/search/repositories?q=${encoded}&sort=stars&order=desc&per_page=5" 2>/dev/null)
 
+  # DEBUG: 输出原始响应（仅首次调试用，后续可删除）
+  echo "<!-- DEBUG ${label}: total=$(echo "$result" | grep -o '"total_count":[0-9]*' | head -1) -->"
+
   # 检查是否被限流
   if echo "$result" | grep -q '"message".*"API rate limit"'; then
     echo "| - | ⚠️ API 限流 | 请稍后重试 | - | - |"
+    echo ""
+    return
+  fi
+
+  # 检查是否有错误
+  if echo "$result" | grep -q '"message":"Validation Failed"'; then
+    echo "| - | ⚠️ 查询语法错误 | $(echo "$result" | grep -o '"message":"[^"]*"' | head -1 | sed 's/.*"message":"//;s/"//' | cut -c1-50) | - | - |"
     echo ""
     return
   fi
@@ -75,6 +85,10 @@ search() {
 }
 
 # ── 按用户兴趣维度搜索 ──
+
+# 先用一个简单查询验证 API 工作正常
+search "✅ 连通性测试" \
+  "stars:>1000 language:python"
 
 search "🤖 AI 应用开发" \
   "ai agent language:python pushed:>$(date -d '30 days ago' +%Y-%m-%d) stars:>${STARS_THRESHOLD}"
