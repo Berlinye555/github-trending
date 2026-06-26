@@ -61,17 +61,21 @@ def fallback_chinese_description(name: str, description: str | None, language: s
         lowered = original.lower()
         if not re.search(r"[\u4e00-\u9fff]", original):
             if "agent" in lowered:
-                return f"面向智能体与自动化场景的{sanitize_text(language) or '项目'}"
+                return f"围绕智能体与自动化场景的{sanitize_text(language) or '开源'}项目"
             if "framework" in lowered:
                 return f"提供{sanitize_text(language) or '开发'}框架能力的项目"
             if "tool" in lowered:
-                return f"实用的{sanitize_text(language) or '开发'}工具项目"
+                return f"实用的{sanitize_text(language) or '开发'}工具"
             if "trading" in lowered or "finance" in lowered or "quant" in lowered:
-                return f"面向量化与金融分析的{sanitize_text(language) or '项目'}"
+                return f"面向量化与金融分析的{sanitize_text(language) or '开源'}项目"
             if "api" in lowered:
-                return f"提供接口与数据能力的{sanitize_text(language) or '项目'}"
+                return f"提供接口与数据能力的{sanitize_text(language) or '开源'}项目"
             if "llm" in lowered or "model" in lowered:
-                return f"围绕大模型与 AI 能力的{sanitize_text(language) or '项目'}"
+                return f"围绕大模型能力的{sanitize_text(language) or '开源'}项目"
+            if "book" in lowered:
+                return f"面向学习与实践的{sanitize_text(language) or '内容'}资料"
+            if "awesome" in lowered:
+                return f"整理精选资源与学习资料的{sanitize_text(language) or '项目'}"
             return f"{sanitize_text(language) or '开源'}项目"
         return original
 
@@ -142,10 +146,10 @@ def format_repo_row(repo: dict) -> str:
 
 def render_section(label: str, query: str) -> str:
     lines = []
-    lines.append(f"## {label}")
+    lines.append(f"### {label}")
     lines.append("")
     lines.append("| ⭐ | 项目链接 | 描述 | 语言 | 更新 |")
-    lines.append("|---|---:|---|---|---|")
+    lines.append("|---:|---|---|---|---|")
     lines.append(f"<!-- DEBUG {label}: query={urllib.parse.quote_plus(query)} -->")
 
     result = fetch_search(query)
@@ -183,20 +187,31 @@ def render_section(label: str, query: str) -> str:
 def build_report() -> str:
     today = now_shanghai()
     sections = [
-        ("✅ 连通性测试", "stars:>1000 language:python"),
         ("🤖 AI 应用开发", f"ai agent language:python pushed:>{days_ago(30)} stars:>20"),
         ("🧠 LLM / Agent 框架", f"llm OR agent framework language:python pushed:>{days_ago(30)} stars:>50"),
         ("💹 量化交易 / 金融", f"trading OR finance OR quant language:python pushed:>{days_ago(60)} stars:>10"),
         ("🔧 CLI / 系统工具", f"cli OR tool language:python pushed:>{days_ago(30)} stars:>20"),
         ("🆕 本周新星", f"created:>{days_ago(7)}"),
-        ("🔥 本月热门（中文）", f"pushed:>{days_ago(30)} stars:>20"),
+        ("🔥 最近 30 天热门（中文）", f"pushed:>{days_ago(30)} stars:>20"),
     ]
 
     output = [
         "# 🔥 GitHub 热门项目日报",
         "",
         f"> 更新时间：{today} CST",
-        "> 搜索维度：AI 应用 · 量化交易 · 系统工具 · 本周新星",
+        "> 关注方向：AI 应用 · 量化交易 · 系统工具 · 本周新星",
+        "> 时间范围：最近 7 天 / 最近 30 天",
+        "",
+        "## 📋 项目总览",
+        "",
+        "| 分类 | 说明 | 关键词 |",
+        "|---|---|---|",
+        "| AI 应用开发 | 智能体与自动化应用 | ai agent |",
+        "| LLM / Agent 框架 | 大模型与智能体基础设施 | llm agent framework |",
+        "| 量化交易 / 金融 | 量化分析与金融工具 | trading finance quant |",
+        "| CLI / 系统工具 | 命令行与系统效率工具 | cli tool |",
+        "| 本周新星 | 最近一周新增热点项目 | created:>7d |",
+        "| 最近 30 天热门（中文） | 最近 30 天高热中文项目 | pushed:>30d |",
         "",
         "---",
         "",
