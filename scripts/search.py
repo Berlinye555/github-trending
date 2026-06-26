@@ -9,6 +9,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 
+
 TOKEN = os.getenv("GITHUB_TOKEN", "")
 
 
@@ -55,55 +56,108 @@ def fetch_search(query: str) -> dict:
         return {"error": str(exc.reason), "status": None}
 
 
-def fallback_chinese_description(name: str, description: str | None, language: str | None) -> str:
+# ── 描述生成（更精准的 fallback 规则） ──
+
+def fallback_chinese_description(full_name: str, description: str | None, language: str | None, topics: list[str] | None = None) -> str:
+    """根据仓库元数据生成中文描述，规则更细化"""
     original = sanitize_text(description)
-    if original != "-":
-        lowered = original.lower()
-        if not re.search(r"[\u4e00-\u9fff]", original):
-            if "agent" in lowered:
-                return f"围绕智能体与自动化场景的{sanitize_text(language) or '开源'}项目"
-            if "framework" in lowered:
-                return f"提供{sanitize_text(language) or '开发'}框架能力的项目"
-            if "tool" in lowered:
-                return f"实用的{sanitize_text(language) or '开发'}工具"
-            if "trading" in lowered or "finance" in lowered or "quant" in lowered:
-                return f"面向量化与金融分析的{sanitize_text(language) or '开源'}项目"
-            if "api" in lowered:
-                return f"提供接口与数据能力的{sanitize_text(language) or '开源'}项目"
-            if "llm" in lowered or "model" in lowered:
-                return f"围绕大模型能力的{sanitize_text(language) or '开源'}项目"
-            if "book" in lowered:
-                return f"面向学习与实践的{sanitize_text(language) or '内容'}资料"
-            if "awesome" in lowered:
-                return f"整理精选资源与学习资料的{sanitize_text(language) or '项目'}"
-            return f"{sanitize_text(language) or '开源'}项目"
+    lang = sanitize_text(language)
+    name_lower = (full_name or "").lower()
+    topics_lower = [t.lower() for t in (topics or [])]
+
+    def has_keyword(*words: str) -> bool:
+        target = f"{original.lower()} {name_lower} {' '.join(topics_lower)}"
+        return any(w in target for w in words)
+
+    # 有中文描述直接复用
+    if original != "-" and re.search(r"[一-鿿]", original):
         return original
 
-    return f"{sanitize_text(language) or '开源'}项目"
+    # 按优先级匹配
+    if has_keyword("browser", "web automation", "playwright", "selenium", "puppeteer"):
+        return f"浏览器自动化与 Web 交互{lang}工具"
+    if has_keyword("trading agent", "tradingagent", "stock agent"):
+        return f"LLM 驱动的智能交易 Agent ——{lang}项目"
+    if has_keyword("langchain", "langgraph", "langflow"):
+        return f"LLM 应用编排与工作流{lang}框架"
+    if has_keyword("agent framework", "multi-agent", "agent orchestration"):
+        return f"多智能体协作与编排{lang}框架"
+    if has_keyword("ai agent", "agentic", "agent "):
+        return f"AI 智能体自动化{lang}应用"
+    if has_keyword("llm", "large language model", "gpt"):
+        return f"大语言模型{lang}工具与框架"
+    if has_keyword("rag", "retrieval augmented"):
+        return f"RAG 检索增强生成{lang}方案"
+    if has_keyword("transformers", "huggingface"):
+        return f"预训练模型与{lang}深度学习框架"
+    if has_keyword("inference", "vllm", "tgi", "triton"):
+        return f"LLM 推理加速与部署{lang}工具"
+    if has_keyword("fine-tune", "fine tune", "lora", "qlora"):
+        return f"大模型微调与训练{lang}工具"
+    if has_keyword("vector database", "embedding", "vector search"):
+        return f"向量数据库与嵌入{lang}方案"
+    if has_keyword("quantitative", "backtest", "backtrader", "vnpy", "zipline"):
+        return f"量化交易回测与策略{lang}框架"
+    if has_keyword("freqtrade", "ccxt", "binance", "crypto trading"):
+        return f"加密货币自动化交易{lang}工具"
+    if has_keyword("openbb", "financial data", "stock analysis", "market data"):
+        return f"金融市场数据分析{lang}平台"
+    if has_keyword("cli tool", "command line", "tui", "terminal"):
+        return f"命令行终端{lang}效率工具"
+    if has_keyword("dev tool", "developer tool", "developer experience"):
+        return f"开发者{lang}效率工具"
+    if has_keyword("package manager", "dependency", "build tool"):
+        return f"{lang}包管理与构建工具"
+    if has_keyword("monitor", "observability", "logging", "tracing"):
+        return f"系统监控与可观测性{lang}工具"
+    if has_keyword("api", "rest", "graphql", "openapi"):
+        return f"API 开发与数据接口{lang}方案"
+    if has_keyword("framework", "library"):
+        return f"{lang}开发框架与库"
+    if has_keyword("tool", "utility", "helper"):
+        return f"{lang}实用工具"
+    if has_keyword("awesome", "curated list", "awesome list"):
+        return f"精选{lang}资源与学习清单"
+    if has_keyword("book", "tutorial", "guide", "handbook", "course"):
+        return f"{lang}学习教程与指南"
+    if has_keyword("markdown"):
+        return f"Markdown 文档与资源"
+    if has_keyword("model", "deep learning", "neural", "machine learning"):
+        return f"深度学习与{lang}模型项目"
+
+    return f"{lang}项目"
 
 
-def rewrite_description(name: str, description: str | None, language: str | None) -> str:
+def rewrite_description(full_name: str, description: str | None, language: str | None, topics: list[str] | None = None) -> str:
+    """AI 改写描述（优化 prompt，要求更具体）"""
     original = sanitize_text(description)
     if original == "-":
         return "-"
+
     if os.getenv("ENABLE_AI_DESCRIPTION_REWRITE", "").lower() not in {"1", "true", "yes", "on"}:
-        return fallback_chinese_description(name, original, language)
+        return fallback_chinese_description(full_name, original, language, topics)
+
     api_key = os.getenv("OPENAI_API_KEY", "")
     if not api_key:
-        return fallback_chinese_description(name, original, language)
+        return fallback_chinese_description(full_name, original, language, topics)
 
     base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
     payload = {
         "model": model,
         "messages": [
             {
                 "role": "system",
-                "content": "You rewrite GitHub repository descriptions for a README table. Keep it short, polished, and factual. Return only one concise sentence in Chinese.",
+                "content": (
+                    "你是 GitHub 项目描述编辑。用一句中文概括项目核心功能和独特价值。"
+                    "要求：20字以内、具体突出项目特色、避免泛泛而谈。"
+                    "不要用'围绕XX场景'这种套话，直接说清楚这个项目做什么。"
+                ),
             },
             {
                 "role": "user",
-                "content": f"Repository: {name}\nLanguage: {sanitize_text(language)}\nOriginal description: {original}",
+                "content": f"项目名：{full_name}\n语言：{sanitize_text(language)}\n原描述：{original}",
             },
         ],
         "temperature": 0.2,
@@ -125,15 +179,20 @@ def rewrite_description(name: str, description: str | None, language: str | None
             data = json.loads(response.read().decode("utf-8"))
             content = data.get("choices", [{}])[0].get("message", {}).get("content", "")
             cleaned = sanitize_text(content)
-            return cleaned[:80] if cleaned else fallback_chinese_description(name, original, language)
+            return cleaned[:80] if cleaned else fallback_chinese_description(full_name, original, language, topics)
     except Exception:
-        return fallback_chinese_description(name, original, language)
+        return fallback_chinese_description(full_name, original, language, topics)
 
 
 def format_repo_row(repo: dict) -> str:
     name = repo.get("full_name") or "-"
     stars = repo.get("stargazers_count")
-    description = rewrite_description(name, repo.get("description"), repo.get("language"))
+    description = rewrite_description(
+        name,
+        repo.get("description"),
+        repo.get("language"),
+        repo.get("topics"),
+    )
     language = repo.get("language") or "-"
     updated_at = (repo.get("updated_at") or "").split("T")[0] if repo.get("updated_at") else "-"
 
@@ -144,95 +203,167 @@ def format_repo_row(repo: dict) -> str:
     return f"| {stars if stars is not None else '-'} | [{name}]({link}) | {description} | {language} | {updated_at} |"
 
 
-def render_section(label: str, query: str) -> str:
+def render_section(label: str, query: str, seen: set[str] | None = None) -> tuple[str, int, int]:
+    """返回 (markdown文本, 显示项目数, 搜索结果总数)"""
     lines = []
     lines.append(f"### {label}")
     lines.append("")
     lines.append("| ⭐ | 项目链接 | 描述 | 语言 | 更新 |")
     lines.append("|---:|---|---|---|---|")
-    lines.append(f"<!-- DEBUG {label}: query={urllib.parse.quote_plus(query)} -->")
 
     result = fetch_search(query)
-    if result.get("status") == 403 or isinstance(result.get("error"), str) and "rate limit" in str(result.get("error")).lower():
-        lines.append("| - | ⚠️ API 限流 | 请稍后重试 | - | - |")
-        lines.append("")
-        return "\n".join(lines)
+    total_count = result.get("total_count", 0)
 
-    if result.get("status") == 422 or isinstance(result.get("error"), str) and "Validation Failed" in str(result.get("error")).lower():
+    if result.get("status") == 403 or (isinstance(result.get("error"), str) and "rate limit" in str(result.get("error")).lower()):
+        lines.append("| - | ⚠️ API 限流 | 请稍后重试，保留上期数据 | - | - |")
+        lines.append("")
+        return "\n".join(lines), 0, total_count
+
+    if result.get("status") == 422 or (isinstance(result.get("error"), str) and "Validation Failed" in str(result.get("error")).lower()):
         message = str(result.get("error", ""))
-        detail = message[:50]
+        detail = sanitize_text(message)[:50]
         lines.append(f"| - | ⚠️ 查询语法错误 | {detail} | - | - |")
         lines.append("")
-        return "\n".join(lines)
+        return "\n".join(lines), 0, total_count
 
     if result.get("status") not in {200, None} and not result.get("items"):
-        lines.append("| - | ⚠️ 请求失败 | 请检查网络或 GitHub API | - | - |")
+        lines.append("| - | ⚠️ 请求失败 | 请检查网络或 GitHub API 状态 | - | - |")
         lines.append("")
-        return "\n".join(lines)
+        return "\n".join(lines), 0, total_count
 
     items = result.get("items") or []
-    total_count = result.get("total_count", 0)
     if not items or total_count == 0:
-        lines.append("| - | 暂无匹配结果 | 换个关键词试试 | - | - |")
+        lines.append("| - | 暂无匹配结果 | 尝试放宽搜索条件 | - | - |")
         lines.append("")
-        return "\n".join(lines)
+        return "\n".join(lines), 0, total_count
 
+    displayed = 0
     for repo in items[:5]:
+        name = repo.get("full_name")
+        if name and seen is not None:
+            if name in seen:
+                continue
+            seen.add(name)
+
         lines.append(format_repo_row(repo))
+        displayed += 1
+
+    if displayed == 0:
+        lines.append("| - | 全部与前面重复 | 已在上方分类展示 | - | - |")
 
     lines.append("")
-    return "\n".join(lines)
+    return "\n".join(lines), displayed, total_count
 
 
-def build_report() -> str:
+def build_report(manual_params: dict | None = None) -> tuple[str, dict]:
+    """生成完整日报，返回 (markdown, 统计摘要)"""
     today = now_shanghai()
+    seven_days = days_ago(7)
+    thirty_days = days_ago(30)
+    sixty_days = days_ago(60)
+
     sections = [
-        ("🤖 AI 应用开发", f"ai agent language:python pushed:>{days_ago(30)} stars:>20"),
-        ("🧠 LLM / Agent 框架", f"llm OR agent framework language:python pushed:>{days_ago(30)} stars:>50"),
-        ("💹 量化交易 / 金融", f"trading OR finance OR quant language:python pushed:>{days_ago(60)} stars:>10"),
-        ("🔧 CLI / 系统工具", f"cli OR tool language:python pushed:>{days_ago(30)} stars:>20"),
-        ("🆕 本周新星", f"created:>{days_ago(7)}"),
-        ("🔥 最近 30 天热门（中文）", f"pushed:>{days_ago(30)} stars:>20"),
+        (
+            "🤖 AI / Agent 项目",
+            f"ai agent OR llm framework language:python pushed:>{thirty_days} stars:>50",
+            "ai agent OR llm framework",
+            ">50",
+            "30天",
+        ),
+        (
+            "💹 量化交易与金融",
+            f"trading OR finance OR quant language:python NOT awesome pushed:>{sixty_days} stars:>10",
+            "trading OR finance OR quant",
+            ">10",
+            "60天",
+        ),
+        (
+            "🛠️ 开发者工具",
+            f"cli OR dev tool language:python NOT awesome pushed:>{thirty_days} stars:>20",
+            "cli OR dev tool",
+            ">20",
+            "30天",
+        ),
+        (
+            "🆕 本月新星",
+            f"created:>{thirty_days} stars:>3",
+            "created:>30d",
+            ">3",
+            "30天",
+        ),
+        (
+            "🌏 中文项目热点",
+            f"人工智能 OR 开源项目 OR 大模型 pushed:>{thirty_days} stars:>20",
+            "人工智能 OR 开源项目 OR 大模型",
+            ">20",
+            "30天",
+        ),
     ]
+
+    # 支持手动指定分类覆盖
+    if manual_params:
+        override_sections = []
+        for label, query, _, _, _ in sections:
+            if manual_params.get("category") and manual_params["category"] != label:
+                override_sections.append((label, query, query, "-", "-"))
+            else:
+                new_query = manual_params.get("query", query)
+                override_sections.append((label, new_query, new_query, "-", "-"))
+        sections = override_sections
 
     output = [
         "# 🔥 GitHub 热门项目日报",
         "",
         f"> 更新时间：{today} CST",
-        "> 关注方向：AI 应用 · 量化交易 · 系统工具 · 本周新星",
-        "> 时间范围：最近 7 天 / 最近 30 天",
+        "> 关注方向：AI / Agent · 量化交易 · 开发者工具 · 本月新星 · 中文热点",
+        f"> 时间范围：{seven_days} ~ {today}",
         "",
         "## 📋 项目总览",
         "",
-        "| 分类 | 说明 | 关键词 |",
-        "|---|---|---|",
-        "| AI 应用开发 | 智能体与自动化应用 | ai agent |",
-        "| LLM / Agent 框架 | 大模型与智能体基础设施 | llm agent framework |",
-        "| 量化交易 / 金融 | 量化分析与金融工具 | trading finance quant |",
-        "| CLI / 系统工具 | 命令行与系统效率工具 | cli tool |",
-        "| 本周新星 | 最近一周新增热点项目 | created:>7d |",
-        "| 最近 30 天热门（中文） | 最近 30 天高热中文项目 | pushed:>30d |",
+        "| 分类 | 说明 | 搜索关键词 | Stars | 时间 |",
+        "|------|------|-----------|-------|------|",
+        "| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >50 | 30天 |",
+        "| 💹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >10 | 60天 |",
+        "| 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >20 | 30天 |",
+        "| 🆕 本月新星 | 30天内新创建的高潜项目 | created:>30d | >3 | 30天 |",
+        "| 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 | >20 | 30天 |",
         "",
         "---",
         "",
     ]
 
-    for label, query in sections:
-        output.append(render_section(label, query))
+    stats = {"categories": {}, "total_projects": 0}
+    seen: set[str] = set()
 
+    for label, query, _, _, _ in sections:
+        md, displayed, total = render_section(label, query, seen)
+        output.append(md)
+        stats["categories"][label] = {"displayed": displayed, "totalResults": total}
+        stats["total_projects"] += displayed
+
+    repo_full = os.getenv("GITHUB_REPOSITORY", "your-org/your-repo")
     output.append("---")
     output.append("")
-    output.append("> 🤖 由 [GitHub Actions](https://github.com/{}/actions) 每日自动更新".format(os.getenv("GITHUB_REPOSITORY", "your-org/your-repo")))
+    output.append(f"> 🤖 由 [GitHub Actions](https://github.com/{repo_full}/actions) 每日自动更新")
     output.append("> 📡 数据来源：[GitHub Search API](https://docs.github.com/en/rest/search)")
-    return "\n".join(output)
+
+    return "\n".join(output), stats
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("output", nargs="?", help="Optional output file path")
+    parser.add_argument("--category", help="指定更新某个分类")
+    parser.add_argument("--query", help="自定义搜索关键词")
+    parser.add_argument("--changeset", help="输出变更摘要文件路径")
     args = parser.parse_args()
 
-    report = build_report()
+    manual = None
+    if args.category or args.query:
+        manual = {"category": args.category, "query": args.query}
+
+    report, stats = build_report(manual)
+
     if args.output:
         with open(args.output, "w", encoding="utf-8") as handle:
             handle.write(report)
@@ -242,6 +373,25 @@ def main() -> int:
             sys.stdout.buffer.write(report.encode("utf-8"))
         else:
             sys.stdout.write(report)
+
+    # 写入变更摘要供 workflow commit message 使用
+    summary_path = args.changeset or os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), ".changeset.json"
+    )
+    try:
+        os.makedirs(os.path.dirname(summary_path), exist_ok=True)
+        summary = {
+            "total": stats["total_projects"],
+            "categories": {
+                k: v["displayed"] for k, v in stats["categories"].items()
+            },
+            "timestamp": now_shanghai(),
+        }
+        with open(summary_path, "w", encoding="utf-8") as handle:
+            json.dump(summary, handle, ensure_ascii=False, indent=2)
+    except Exception:
+        pass  # 摘要写入失败不影响主流程
+
     return 0
 
 

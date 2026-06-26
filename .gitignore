@@ -1,0 +1,9 @@
+# 变更摘要（临时文件，仅 workflow 使用）
+scripts/.changeset.json
+
+# Python
+__pycache__/
+*.pyc
+
+# 测试输出
+test-output.md
