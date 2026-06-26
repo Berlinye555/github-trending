@@ -2,7 +2,8 @@
 # GitHub Trending Repos Collector
 # 根据 Alpha矿长 的兴趣方向定时搜索最新热门项目
 
-set -euo
+set -eu
+set -o pipefail
 
 TODAY=$(TZ='Asia/Shanghai' date +'%Y-%m-%d %H:%M')
 STARS_THRESHOLD=20
@@ -64,32 +65,43 @@ search() {
     return
   fi
 
-  # 提取每个 repo 的字段（description/language 可能为 null）
-  echo "$result" | grep -o '"full_name": *"[^"]*"\|"stargazers_count": *[0-9]*\|"description": *\(null\|"[^"]*"\)\|"language": *\(null\|"[^"]*"\)\|"updated_at": *"[^"]*"\|"html_url": *"[^"]*"' \
-    | paste - - - - - - 2>/dev/null \
-    | head -5 \
-    | while IFS=$'\t' read -r full_name stars desc lang updated url; do
-      local name star desc_text lang_text date_text link
-      name=$(echo "$full_name" | sed 's/.*"full_name": *"\([^"]*\)".*/\1/')
-      star=$(echo "$stars" | grep -o '[0-9]*')
-      # 解析 description（可能是 "..." 或 null）
-      if echo "$desc" | grep -q '"description": null'; then
-        desc_text=""
-      else
-        desc_text=$(echo "$desc" | sed 's/.*"description": *"\([^"]*\)".*/\1/' | sed 's/\\n/ /g' | cut -c1-60)
-      fi
-      # 解析 language（可能是 "..." 或 null）
-      if echo "$lang" | grep -q '"language": null'; then
-        lang_text=""
-      else
-        lang_text=$(echo "$lang" | sed 's/.*"language": *"\([^"]*\)".*/\1/')
-      fi
-      date_text=$(echo "$updated" | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' | head -1)
-      link=$(echo "$url" | sed 's/.*"html_url": *"\([^"]*\)".*/\1/')
-      [ -z "$desc_text" ] && desc_text="-"
-      [ -z "$lang_text" ] && lang_text="-"
-      echo "| ${star} | [${name}](${link}) | ${desc_text} | ${lang_text} | ${date_text} |"
-    done || true
+  # 逐 repo 解析（用 "full_name" 分割，避免嵌套对象字段干扰）
+  local idx=0
+  echo "$result" | sed 's/{"full_name"/\n{"full_name"/g' | tail -n +2 | head -5 | while IFS= read -r repo; do
+    # 移掉 owner 嵌套对象（避免其 html_url 等字段干扰匹配）
+    local clean_repo
+    clean_repo=$(echo "$repo" | sed 's/"owner":{[^}]*},//')
+
+    local name star desc_text lang_text date_text link
+    # full_name（只有一个）
+    name=$(echo "$clean_repo" | grep -o '"full_name": *"[^"]*"' | head -1 | sed 's/.*"full_name": *"\([^"]*\)".*/\1/')
+    # stargazers_count
+    star=$(echo "$clean_repo" | grep -o '"stargazers_count": *[0-9]*' | head -1 | grep -o '[0-9]*')
+    # description（可能是 null）
+    desc_text=$(echo "$clean_repo" | grep -o '"description": *\(null\|"[^"]*"\)' | head -1)
+    if echo "$desc_text" | grep -q 'null'; then
+      desc_text="-"
+    else
+      desc_text=$(echo "$desc_text" | sed 's/.*"description": *"\([^"]*\)".*/\1/' | sed 's/\\n/ /g' | cut -c1-60)
+    fi
+    # language（可能是 null）
+    lang_text=$(echo "$clean_repo" | grep -o '"language": *\(null\|"[^"]*"\)' | head -1)
+    if echo "$lang_text" | grep -q 'null'; then
+      lang_text="-"
+    else
+      lang_text=$(echo "$lang_text" | sed 's/.*"language": *"\([^"]*\)".*/\1/')
+    fi
+    # updated_at
+    date_text=$(echo "$clean_repo" | grep -o '"updated_at": *"[^"]*"' | head -1 | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' | head -1)
+    # html_url（已移除 owner，只剩 repo 自己的）
+    link=$(echo "$clean_repo" | grep -o '"html_url": *"[^"]*"' | head -1 | sed 's/.*"html_url": *"\([^"]*\)".*/\1/')
+
+    [ -z "$star" ] && star="-"
+    [ -z "$desc_text" ] && desc_text="-"
+    [ -z "$lang_text" ] && lang_text="-"
+    [ -z "$date_text" ] && date_text="-"
+    echo "| ${star} | [${name}](${link}) | ${desc_text} | ${lang_text} | ${date_text} |"
+  done || true
 
   echo ""
 }
