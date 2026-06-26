@@ -1,6 +1,6 @@
 # 🔥 GitHub 热门项目日报
 
-> 更新时间：2026-06-26 16:21 CST
+> 更新时间：2026-06-26 16:26 CST
 > 搜索维度：AI 应用 · 量化交易 · 系统工具 · 本周新星
 
 ---
@@ -10,77 +10,77 @@
 | ⭐ | 项目 | 描述 | 语言 | 更新 |
 |---|---:|---|---|---|
 <!-- DEBUG ✅ 连通性测试: query=stars%3A%3E1000%20language%3Apython -->
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
+| 444298 | [public-apis/public-apis](https://github.com/public-apis) | A collective list of free APIs | Python | 2026-06-26 |
+| 390814 | [EbookFoundation/free-programming-books](https://github.com/public-apis/public-apis) | :books: Freely available programming books | Python | 2026-06-26 |
+| 354935 | [donnemartin/system-design-primer](https://github.com/EbookFoundation) | Learn how to design large-scale systems. Prep for the system | Python | 2026-06-26 |
+| 304874 | [vinta/awesome-python](https://github.com/EbookFoundation/free-programming-books) | An opinionated list of Python frameworks, libraries, tools,  | Python | 2026-06-26 |
+| 222214 | [TheAlgorithms/Python](https://github.com/donnemartin) | All Algorithms implemented in Python | Python | 2026-06-26 |
 
 ## 🤖 AI 应用开发
 
 | ⭐ | 项目 | 描述 | 语言 | 更新 |
 |---|---:|---|---|---|
 <!-- DEBUG 🤖 AI 应用开发: query=ai%20agent%20language%3Apython%20pushed%3A%3E2026-05-27%20stars%3A%3E20 -->
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
+| 203335 | [NousResearch/hermes-agent](https://github.com/NousResearch) | The agent that grows with you | Python | 2026-06-26 |
+| 150106 | [langflow-ai/langflow](https://github.com/NousResearch/hermes-agent) | Langflow is a powerful tool for building and deploying AI-po | Python | 2026-06-26 |
+| 140247 | [langchain-ai/langchain](https://github.com/langflow-ai) | The agent engineering platform. | Python | 2026-06-26 |
+| 115654 | [Shubhamsaboo/awesome-llm-apps](https://github.com/langflow-ai/langflow) | 100+ AI Agent & RAG apps you can actually run — clone, cus | Python | 2026-06-26 |
+| 100759 | [browser-use/browser-use](https://github.com/langchain-ai) | 🌐 Make websites accessible for AI agents. Automate tasks  | Python | 2026-06-26 |
 
 ## 🧠 LLM / Agent 框架
 
 | ⭐ | 项目 | 描述 | 语言 | 更新 |
 |---|---:|---|---|---|
 <!-- DEBUG 🧠 LLM / Agent 框架: query=llm%20OR%20agent%20framework%20language%3Apython%20pushed%3A%3E2026-05-27%20stars%3A%3E50 -->
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
+| 304874 | [vinta/awesome-python](https://github.com/vinta) | An opinionated list of Python frameworks, libraries, tools,  | Python | 2026-06-26 |
+| 161930 | [huggingface/transformers](https://github.com/vinta/awesome-python) | 🤗 Transformers: the model-definition framework for state- | Python | 2026-06-26 |
+| 140247 | [langchain-ai/langchain](https://github.com/huggingface) | The agent engineering platform. | Python | 2026-06-26 |
+| 99674 | [fastapi/fastapi](https://github.com/huggingface/transformers) | FastAPI framework, high performance, easy to learn, fast to  | Python | 2026-06-26 |
+| 88668 | [TauricResearch/TradingAgents](https://github.com/langchain-ai) | TradingAgents: Multi-Agents LLM Financial Trading Framework | Python | 2026-06-26 |
 
 ## 💹 量化交易 / 金融
 
 | ⭐ | 项目 | 描述 | 语言 | 更新 |
 |---|---:|---|---|---|
 <!-- DEBUG 💹 量化交易 / 金融: query=trading%20OR%20finance%20OR%20quant%20language%3Apython%20pushed%3A%3E2026-04-27%20stars%3A%3E10 -->
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
+| 88668 | [TauricResearch/TradingAgents](https://github.com/TauricResearch) | TradingAgents: Multi-Agents LLM Financial Trading Framework | Python | 2026-06-26 |
+| 69693 | [OpenBB-finance/OpenBB](https://github.com/TauricResearch/TradingAgents) | Financial data platform for analysts, quants and AI agents. | Python | 2026-06-26 |
+| 51848 | [freqtrade/freqtrade](https://github.com/OpenBB-finance) | Free, open source crypto trading bot | Python | 2026-06-26 |
+| 49807 | [ZhuLinsen/daily_stock_analysis](https://github.com/OpenBB-finance/OpenBB) | LLM 驱动的多市场股票智能分析系统：多源行� | Python | 2026-06-26 |
+| 45064 | [SimplifyJobs/Summer2026-Internships](https://github.com/freqtrade) | Summer 2026 software engineering, data science, AI, quant, p | Python | 2026-06-26 |
 
 ## 🔧 CLI / 系统工具
 
 | ⭐ | 项目 | 描述 | 语言 | 更新 |
 |---|---:|---|---|---|
 <!-- DEBUG 🔧 CLI / 系统工具: query=cli%20OR%20tool%20language%3Apython%20pushed%3A%3E2026-05-27%20stars%3A%3E20 -->
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
+| 304874 | [vinta/awesome-python](https://github.com/vinta) | An opinionated list of Python frameworks, libraries, tools,  | Python | 2026-06-26 |
+| 185157 | [Significant-Gravitas/AutoGPT](https://github.com/vinta/awesome-python) | AutoGPT is the vision of accessible AI for everyone, to use  | Python | 2026-06-26 |
+| 173436 | [yt-dlp/yt-dlp](https://github.com/Significant-Gravitas) | A feature-rich command-line audio/video downloader | Python | 2026-06-26 |
+| 159313 | [microsoft/markitdown](https://github.com/Significant-Gravitas/AutoGPT) | Python tool for converting files and office documents to Mar | Python | 2026-06-26 |
+| 150106 | [langflow-ai/langflow](https://github.com/yt-dlp) | Langflow is a powerful tool for building and deploying AI-po | Python | 2026-06-26 |
 
 ## 🆕 本周新星
 
 | ⭐ | 项目 | 描述 | 语言 | 更新 |
 |---|---:|---|---|---|
 <!-- DEBUG 🆕 本周新星: query=created%3A%3E2026-06-19 -->
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
+| 2045 | [bozhouDev/codex-orange-book](https://github.com/bozhouDev) | Codex 橙皮书：从安装到实战案例的全链路 Codex | HTML | 2026-06-26 |
+| 1049 | [lyra81604/zhengxi-views](https://github.com/bozhouDev/codex-orange-book) | 可溯源的郑希(易方达基金经理)投研 Agent Skill� | Python | 2026-06-26 |
+| 788 | [kanavtwtgg/birds.cafe](https://github.com/lyra81604) | - | JavaScript | 2026-06-26 |
+| 533 | [yo-WASSUP/Good-Badminton](https://github.com/lyra81604/zhengxi-views) | 🏸  AI Badminton Hawk-Eye System | Python | 2026-06-26 |
+| 527 | [QwenLM/Qwen-AgentWorld](https://github.com/kanavtwtgg) | Qwen-AgentWorld: Language World Models for General Agents | Python | 2026-06-26 |
 
 ## 🔥 本月热门（中文）
 
 | ⭐ | 项目 | 描述 | 语言 | 更新 |
 |---|---:|---|---|---|
 <!-- DEBUG 🔥 本月热门（中文）: query=pushed%3A%3E2026-05-27%20stars%3A%3E20 -->
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
-| - | []() | - | - | - |
+| 519786 | [codecrafters-io/build-your-own-x](https://github.com/codecrafters-io) | Master programming by recreating your favorite technologies  | Markdown | 2026-06-26 |
+| 478887 | [sindresorhus/awesome](https://github.com/codecrafters-io/build-your-own-x) | 😎 Awesome lists about all kinds of interesting topics | - | 2026-06-26 |
+| 450551 | [freeCodeCamp/freeCodeCamp](https://github.com/sindresorhus) | freeCodeCamp.org's open-source codebase and curriculum. Lear | TypeScript | 2026-06-26 |
+| 444298 | [public-apis/public-apis](https://github.com/sindresorhus/awesome) | A collective list of free APIs | Python | 2026-06-26 |
+| 390814 | [EbookFoundation/free-programming-books](https://github.com/freeCodeCamp) | :books: Freely available programming books | Python | 2026-06-26 |
 
 
 ---
