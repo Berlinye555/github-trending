@@ -1,0 +1,215 @@
+{
+  "updated": "2026-06-26 18:14",
+  "categories": {
+    "🤖 AI / Agent 项目": [
+      {
+        "full_name": "langchain-ai/langchain",
+        "stars": 140263,
+        "description": "LLM 应用编排与工作流Python框架",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "D4Vinci/Scrapling",
+        "stars": 66225,
+        "description": "浏览器自动化与 Web 交互Python工具",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "crewAIInc/crewAI",
+        "stars": 54407,
+        "description": "AI 智能体自动化Python应用",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "langchain-ai/langgraph",
+        "stars": 35808,
+        "description": "LLM 应用编排与工作流Python框架",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "AstrBotDevs/AstrBot",
+        "stars": 35381,
+        "description": "AI 智能体自动化Python应用",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      }
+    ],
+    "🌏 中文项目热点": [
+      {
+        "full_name": "521xueweihan/HelloGitHub",
+        "stars": 162772,
+        "description": ":octocat: 分享 GitHub 上有趣、入门级的开源项目。Share interesting, entry-level open source projects on GitHub.",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "harry0703/MoneyPrinterTurbo",
+        "stars": 92942,
+        "description": "利用AI大模型，一键生成高清短视频 Generate short videos with one click using AI LLM.",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "jingyaogong/minimind",
+        "stars": 52220,
+        "description": "🧠「大模型」2小时完全从0训练64M的小参数LLM！Train a 64M-parameter LLM from scratch in just 2h!",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "jeecgboot/JeecgBoot",
+        "stars": 46900,
+        "description": "AI 低代码平台「低代码 + 零代码」双驱动！低代码可一键生成前后端代码;零代码可 5 分钟搭建系统;AI Skills 一句话画流程、设计表单、生成整套系统。内置 AI聊天、知识库、流程编排、MCP插件等，兼容主流大模型。引领「AI 生成 → 在线配置 → 代码生成 → 手工合并->AI修改」开发模式，消除 Java 项目 80% 的重复工作，提效而不失灵活。",
+        "language": "Java",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "YunaiV/ruoyi-vue-pro",
+        "stars": 37966,
+        "description": "🔥 官方推荐 🔥 RuoYi-Vue 全新 Pro 版本，优化重构所有功能。基于 Spring Boot + MyBatis Plus + Vue & Element 实现的后台管理系统 + 微信小程序，支持 RBAC 动态权限、数据权限、SaaS 多租户、Flowable 工作流、三方登录、支付、短信、商城、CRM、ERP、MES、IM、AI 大模型、IoT 物联网等功能。你的 ⭐️ Star ⭐️，是作者生发的动力！",
+        "language": "Java",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      }
+    ],
+    "📹 量化交易与金融": [
+      {
+        "full_name": "TauricResearch/TradingAgents",
+        "stars": 88711,
+        "description": "LLM 驱动的智能交易 Agent ——Python项目",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "OpenBB-finance/OpenBB",
+        "stars": 69696,
+        "description": "AI 智能体自动化Python应用",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "freqtrade/freqtrade",
+        "stars": 51851,
+        "description": "加密货币自动化交易Python工具",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "ZhuLinsen/daily_stock_analysis",
+        "stars": 49894,
+        "description": "LLM 驱动的多市场股票智能分析系统：多源行情、实时新闻、决策看板与自动推送，支持零成本定时运行。  LLM-powered multi-market stock analysis system with multi-source market data, real-time news, decision dashboard, automated notifications, and cost-free scheduled runs.",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "SimplifyJobs/Summer2026-Internships",
+        "stars": 45064,
+        "description": "Python项目",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      }
+    ],
+    "🛠️ 开发者工具": [
+      {
+        "full_name": "Significant-Gravitas/AutoGPT",
+        "stars": 185156,
+        "description": "AI 智能体自动化Python应用",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "microsoft/markitdown",
+        "stars": 159354,
+        "description": "LLM 应用编排与工作流Python框架",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "langflow-ai/langflow",
+        "stars": 150110,
+        "description": "LLM 应用编排与工作流Python框架",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "anthropics/claude-code",
+        "stars": 134505,
+        "description": "AI 智能体自动化Python应用",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "bytedance/deer-flow",
+        "stars": 74818,
+        "description": "LLM 应用编排与工作流Python框架",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      }
+    ],
+    "🆕 本月热门": [
+      {
+        "full_name": "codecrafters-io/build-your-own-x",
+        "stars": 519814,
+        "description": "精选Markdown资源与学习清单",
+        "language": "Markdown",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "sindresorhus/awesome",
+        "stars": 478908,
+        "description": "API 开发与数据接口-方案",
+        "language": "-",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "freeCodeCamp/freeCodeCamp",
+        "stars": 450557,
+        "description": "TypeScript项目",
+        "language": "TypeScript",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "public-apis/public-apis",
+        "stars": 444313,
+        "description": "API 开发与数据接口Python方案",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      },
+      {
+        "full_name": "EbookFoundation/free-programming-books",
+        "stars": 390818,
+        "description": "Python学习教程与指南",
+        "language": "Python",
+        "updated_at": "2026-06-26",
+        "added": "2026-06-26"
+      }
+    ]
+  }
+}

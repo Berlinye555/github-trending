@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""GitHub 热门项目日报 —— 增量追加模式。
+
+数据存储在 scripts/repos.json，每次运行搜索新项目追加到已有列表，
+避免覆盖历史数据。README.md 由 repos.json 渲染生成。
+"""
 import argparse
 import json
 import os
@@ -9,12 +14,19 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 
-
 TOKEN = os.getenv("GITHUB_TOKEN", "")
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(SCRIPT_DIR, "repos.json")
 
+
+# ── 工具函数 ──
 
 def now_shanghai() -> str:
     return datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M")
+
+
+def today_str() -> str:
+    return datetime.now(timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
 
 
 def days_ago(days: int) -> str:
@@ -31,8 +43,7 @@ def sanitize_text(value: str | None) -> str:
 
 
 def escape_markdown(value: str | None) -> str:
-    text = sanitize_text(value)
-    return text.replace("|", "\\|")
+    return sanitize_text(value).replace("|", "\\|")
 
 
 def fetch_search(query: str) -> dict:
@@ -44,7 +55,6 @@ def fetch_search(query: str) -> dict:
     }
     if TOKEN:
         headers["Authorization"] = f"Bearer {TOKEN}"
-
     request = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(request, timeout=30) as response:
@@ -56,10 +66,9 @@ def fetch_search(query: str) -> dict:
         return {"error": str(exc.reason), "status": None}
 
 
-# ── 描述生成（更精准的 fallback 规则） ──
+# ── 描述生成 ──
 
 def fallback_chinese_description(full_name: str, description: str | None, language: str | None, topics: list[str] | None = None) -> str:
-    """根据仓库元数据生成中文描述，规则更细化"""
     original = sanitize_text(description)
     lang = sanitize_text(language)
     name_lower = (full_name or "").lower()
@@ -69,11 +78,9 @@ def fallback_chinese_description(full_name: str, description: str | None, langua
         target = f"{original.lower()} {name_lower} {' '.join(topics_lower)}"
         return any(w in target for w in words)
 
-    # 有中文描述直接复用
     if original != "-" and re.search(r"[一-鿿]", original):
         return original
 
-    # 按优先级匹配
     if has_keyword("browser", "web automation", "playwright", "selenium", "puppeteer"):
         return f"浏览器自动化与 Web 交互{lang}工具"
     if has_keyword("trading agent", "tradingagent", "stock agent"):
@@ -129,7 +136,6 @@ def fallback_chinese_description(full_name: str, description: str | None, langua
 
 
 def rewrite_description(full_name: str, description: str | None, language: str | None, topics: list[str] | None = None) -> str:
-    """AI 改写描述（优化 prompt，要求更具体）"""
     original = sanitize_text(description)
     if original == "-":
         return "-"
@@ -143,7 +149,6 @@ def rewrite_description(full_name: str, description: str | None, language: str |
 
     base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1").rstrip("/")
     model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-
     payload = {
         "model": model,
         "messages": [
@@ -173,7 +178,6 @@ def rewrite_description(full_name: str, description: str | None, language: str |
         },
         method="POST",
     )
-
     try:
         with urllib.request.urlopen(request, timeout=20) as response:
             data = json.loads(response.read().decode("utf-8"))
@@ -184,214 +188,246 @@ def rewrite_description(full_name: str, description: str | None, language: str |
         return fallback_chinese_description(full_name, original, language, topics)
 
 
-def format_repo_row(repo: dict) -> str:
+# ── 数据持久层 ──
+
+def load_repos_db() -> dict:
+    """加载 repos.json 数据库"""
+    if not os.path.exists(DB_PATH):
+        return {"updated": "", "categories": {}}
+    try:
+        with open(DB_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return {"updated": "", "categories": {}}
+
+
+def save_repos_db(data: dict) -> None:
+    """保存 repos.json 数据库"""
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    with open(DB_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def get_existing_names(db: dict) -> set[str]:
+    """从数据库中提取所有已收录的 full_name"""
+    names: set[str] = set()
+    for entries in db.get("categories", {}).values():
+        for entry in entries:
+            if isinstance(entry, dict) and entry.get("full_name"):
+                names.add(entry["full_name"])
+    return names
+
+
+def repo_to_entry(repo: dict) -> dict:
+    """将 API 返回的 repo 对象转为存储条目"""
     name = repo.get("full_name") or "-"
-    stars = repo.get("stargazers_count")
-    description = rewrite_description(
-        name,
-        repo.get("description"),
-        repo.get("language"),
-        repo.get("topics"),
-    )
-    language = repo.get("language") or "-"
-    updated_at = (repo.get("updated_at") or "").split("T")[0] if repo.get("updated_at") else "-"
-
-    description = escape_markdown(description)[:80]
-    language = escape_markdown(language)
-
-    link = f"https://github.com/{name}"
-    return f"| {stars if stars is not None else '-'} | [{name}]({link}) | {description} | {language} | {updated_at} |"
+    return {
+        "full_name": name,
+        "stars": repo.get("stargazers_count", 0) or 0,
+        "description": rewrite_description(
+            name, repo.get("description"), repo.get("language"), repo.get("topics"),
+        ),
+        "language": repo.get("language") or "-",
+        "updated_at": (repo.get("updated_at") or "").split("T")[0] if repo.get("updated_at") else "-",
+        "added": today_str(),
+    }
 
 
-def render_section(label: str, query: str, seen: set[str] | None = None) -> tuple[str, int, int]:
-    """返回 (markdown文本, 显示项目数, 搜索结果总数)"""
-    lines = []
-    lines.append(f"### {label}")
-    lines.append("")
-    lines.append("| ⭐ | 项目链接 | 描述 | 语言 | 更新 |")
-    lines.append("|---:|---|---|---|---|")
+# ── 搜索与增量更新 ──
 
-    result = fetch_search(query)
-    total_count = result.get("total_count", 0)
-
-    if result.get("status") == 403 or (isinstance(result.get("error"), str) and "rate limit" in str(result.get("error")).lower()):
-        lines.append("| - | ⚠️ API 限流 | 请稍后重试，保留上期数据 | - | - |")
-        lines.append("")
-        return "\n".join(lines), 0, total_count
-
-    if result.get("status") == 422 or (isinstance(result.get("error"), str) and "Validation Failed" in str(result.get("error")).lower()):
-        message = str(result.get("error", ""))
-        detail = sanitize_text(message)[:50]
-        lines.append(f"| - | ⚠️ 查询语法错误 | {detail} | - | - |")
-        lines.append("")
-        return "\n".join(lines), 0, total_count
-
-    if result.get("status") not in {200, None} and not result.get("items"):
-        lines.append("| - | ⚠️ 请求失败 | 请检查网络或 GitHub API 状态 | - | - |")
-        lines.append("")
-        return "\n".join(lines), 0, total_count
-
-    items = result.get("items") or []
-    if not items or total_count == 0:
-        lines.append("| - | 暂无匹配结果 | 尝试放宽搜索条件 | - | - |")
-        lines.append("")
-        return "\n".join(lines), 0, total_count
-
-    displayed = 0
-    for repo in items[:5]:
-        name = repo.get("full_name")
-        if name and seen is not None:
-            if name in seen:
-                continue
-            seen.add(name)
-
-        lines.append(format_repo_row(repo))
-        displayed += 1
-
-    if displayed == 0:
-        lines.append("| - | 全部与前面重复 | 已在上方分类展示 | - | - |")
-
-    lines.append("")
-    return "\n".join(lines), displayed, total_count
+SECTION_DEFS = [
+    (
+        "\U0001f916 AI / Agent 项目",
+        "ai agent OR llm framework language:python",
+        ">50",
+        "30天",
+    ),
+    (
+        "\U0001f30f 中文项目热点",
+        "人工智能 OR 开源项目 OR 大模型",
+        ">20",
+        "30天",
+    ),
+    (
+        "\U0001f4f9 量化交易与金融",
+        "trading OR finance OR quant language:python NOT awesome",
+        ">10",
+        "60天",
+    ),
+    (
+        "\U0001f6e0️ 开发者工具",
+        "cli OR dev tool language:python NOT awesome",
+        ">20",
+        "30天",
+    ),
+    (
+        "\U0001f195 本月热门",
+        "stars:>100",
+        ">100",
+        "30天",
+    ),
+]
 
 
-def build_report(manual_params: dict | None = None) -> tuple[str, dict]:
-    """生成完整日报，返回 (markdown, 统计摘要)"""
-    today = now_shanghai()
-    seven_days = days_ago(7)
+def search_and_append(db: dict) -> dict:
+    """搜索 API 并将新项目追加到数据库，返回新增统计"""
+    stats: dict[str, int] = {}
+    existing = get_existing_names(db)
     thirty_days = days_ago(30)
     sixty_days = days_ago(60)
 
-    sections = [
-        (
-            "🤖 AI / Agent 项目",
-            f"ai agent OR llm framework language:python pushed:>{thirty_days} stars:>50",
-            "ai agent OR llm framework",
-            ">50",
-            "30天",
-        ),
-        (
-            "💹 量化交易与金融",
-            f"trading OR finance OR quant language:python NOT awesome pushed:>{sixty_days} stars:>10",
-            "trading OR finance OR quant",
-            ">10",
-            "60天",
-        ),
-        (
-            "🛠️ 开发者工具",
-            f"cli OR dev tool language:python NOT awesome pushed:>{thirty_days} stars:>20",
-            "cli OR dev tool",
-            ">20",
-            "30天",
-        ),
-        (
-            "🆕 本月新星",
-            f"created:>{thirty_days} stars:>3",
-            "created:>30d",
-            ">3",
-            "30天",
-        ),
-        (
-            "🌏 中文项目热点",
-            f"人工智能 OR 开源项目 OR 大模型 pushed:>{thirty_days} stars:>20",
-            "人工智能 OR 开源项目 OR 大模型",
-            ">20",
-            "30天",
-        ),
-    ]
+    time_ranges = [thirty_days, thirty_days, sixty_days, thirty_days, thirty_days]
 
-    # 支持手动指定分类覆盖
-    if manual_params:
-        override_sections = []
-        for label, query, _, _, _ in sections:
-            if manual_params.get("category") and manual_params["category"] != label:
-                override_sections.append((label, query, query, "-", "-"))
-            else:
-                new_query = manual_params.get("query", query)
-                override_sections.append((label, new_query, new_query, "-", "-"))
-        sections = override_sections
+    for idx, (label, base_query, stars_threshold, _time_label) in enumerate(SECTION_DEFS):
+        time_filter = time_ranges[idx]
+        query = f"{base_query} pushed:>{time_filter} stars:{stars_threshold}"
 
-    output = [
-        "# 🔥 GitHub 热门项目日报",
+        result = fetch_search(query)
+        items = result.get("items") or []
+        if not items:
+            stats[label] = 0
+            continue
+
+        # 确保分类存在
+        if label not in db.setdefault("categories", {}):
+            db["categories"][label] = []
+
+        category_list: list = db["categories"][label]
+        new_count = 0
+
+        for repo in items:
+            name = repo.get("full_name")
+            if not name:
+                continue
+            if name in existing:
+                continue
+            # 同一分类内避免重复
+            if any(e.get("full_name") == name for e in category_list):
+                continue
+
+            entry = repo_to_entry(repo)
+            category_list.append(entry)
+            existing.add(name)
+            new_count += 1
+
+        stats[label] = new_count
+
+    db["updated"] = now_shanghai()
+    return stats
+
+
+# ── README 渲染 ──
+
+def format_row(entry: dict) -> str:
+    stars = entry.get("stars", "-")
+    name = entry.get("full_name", "-")
+    desc = escape_markdown(entry.get("description", "-"))[:80]
+    lang = escape_markdown(entry.get("language", "-"))
+    updated = entry.get("updated_at") or (entry.get("added", ""))
+    link = f"https://github.com/{name}"
+    return f"| {stars} | [{name}]({link}) | {desc} | {lang} | {updated} |"
+
+
+def render_readme(db: dict) -> str:
+    """从数据库渲染完整 README.md"""
+    today = now_shanghai()
+    cats = db.get("categories", {})
+
+    # 预定义各分类名称（避免 f-string 内反斜杠问题）
+    L_AI = "\U0001f916 AI / Agent 项目"
+    L_ZH = "\U0001f30f 中文项目热点"
+    L_TRADE = "\U0001f4f9 量化交易与金融"
+    L_TOOL = "\U0001f6e0️ 开发者工具"
+    L_HOT = "\U0001f195 本月热门"
+
+    lines = [
+        "# \U0001f525 GitHub 热门项目日报",
         "",
         f"> 更新时间：{today} CST",
-        "> 关注方向：AI / Agent · 量化交易 · 开发者工具 · 本月新星 · 中文热点",
-        f"> 时间范围：{seven_days} ~ {today}",
+        "> 关注方向：AI / Agent · 中文热点 · 量化交易 · 开发者工具 · 本月热门",
+        f"> 数据范围：{days_ago(60)} ~ {today}",
         "",
-        "## 📋 项目总览",
+        "## \U0001f4cb 项目总览",
         "",
-        "| 分类 | 说明 | 搜索关键词 | Stars | 时间 |",
-        "|------|------|-----------|-------|------|",
-        "| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >50 | 30天 |",
-        "| 💹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >10 | 60天 |",
-        "| 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >20 | 30天 |",
-        "| 🆕 本月新星 | 30天内新创建的高潜项目 | created:>30d | >3 | 30天 |",
-        "| 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 | >20 | 30天 |",
+        "| 分类 | 说明 | 搜索关键词 | Stars | 时间 | 已收录 |",
+        "|------|------|-----------|-------|------|------|",
+        f"| {L_AI} | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >50 | 30天 | {len(cats.get(L_AI, []))} |",
+        f"| {L_ZH} | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 | >20 | 30天 | {len(cats.get(L_ZH, []))} |",
+        f"| {L_TRADE} | 量化策略、金融数据、回测 | trading OR finance OR quant | >10 | 60天 | {len(cats.get(L_TRADE, []))} |",
+        f"| {L_TOOL} | CLI、效率工具、开发辅助 | cli OR dev tool | >20 | 30天 | {len(cats.get(L_TOOL, []))} |",
+        f"| {L_HOT} | 30天内活跃的历史高星项目 | stars:>100 | >100 | 30天 | {len(cats.get(L_HOT, []))} |",
         "",
         "---",
         "",
     ]
 
-    stats = {"categories": {}, "total_projects": 0}
-    seen: set[str] = set()
+    for label, _query, _stars, _time in SECTION_DEFS:
+        lines.append(f"### {label}")
+        lines.append("")
+        lines.append("| ⭐ | 项目链接 | 描述 | 语言 | 更新 |")
+        lines.append("|---:|---|---|---|---|")
 
-    for label, query, _, _, _ in sections:
-        md, displayed, total = render_section(label, query, seen)
-        output.append(md)
-        stats["categories"][label] = {"displayed": displayed, "totalResults": total}
-        stats["total_projects"] += displayed
+        entries = db.get("categories", {}).get(label, [])
+        if not entries:
+            lines.append("| - | 暂无 | 等待下次更新 | - | - |")
+        else:
+            for entry in entries:
+                lines.append(format_row(entry))
+
+        lines.append("")
 
     repo_full = os.getenv("GITHUB_REPOSITORY", "your-org/your-repo")
-    output.append("---")
-    output.append("")
-    output.append(f"> 🤖 由 [GitHub Actions](https://github.com/{repo_full}/actions) 每日自动更新")
-    output.append("> 📡 数据来源：[GitHub Search API](https://docs.github.com/en/rest/search)")
+    lines.append("---")
+    lines.append("")
+    lines.append(f"> \U0001f916 由 [GitHub Actions](https://github.com/{repo_full}/actions) 每日自动更新")
+    lines.append("> \U0001f4e1 数据来源：[GitHub Search API](https://docs.github.com/en/rest/search)")
 
-    return "\n".join(output), stats
+    return "\n".join(lines)
 
+
+# ── 主入口 ──
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("output", nargs="?", help="Optional output file path")
-    parser.add_argument("--category", help="指定更新某个分类")
-    parser.add_argument("--query", help="自定义搜索关键词")
-    parser.add_argument("--changeset", help="输出变更摘要文件路径")
+    parser = argparse.ArgumentParser(description="GitHub 热门项目日报 —— 增量追加模式")
+    parser.add_argument("output", nargs="?", help="输出文件路径（默认 README.md）")
+    parser.add_argument("--changeset", help="变更摘要文件路径")
     args = parser.parse_args()
 
-    manual = None
-    if args.category or args.query:
-        manual = {"category": args.category, "query": args.query}
+    # 1) 加载数据库
+    db = load_repos_db()
 
-    report, stats = build_report(manual)
+    # 2) 搜索并增量追加
+    stats = search_and_append(db)
 
-    if args.output:
-        with open(args.output, "w", encoding="utf-8") as handle:
-            handle.write(report)
-            handle.write("\n")
-    else:
-        if hasattr(sys.stdout, "buffer"):
-            sys.stdout.buffer.write(report.encode("utf-8"))
-        else:
-            sys.stdout.write(report)
+    # 3) 保存数据库
+    save_repos_db(db)
 
-    # 写入变更摘要供 workflow commit message 使用
-    summary_path = args.changeset or os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), ".changeset.json"
-    )
+    # 4) 渲染 README
+    report = render_readme(db)
+
+    output_path = args.output or "README.md"
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(report)
+        f.write("\n")
+
+    # 5) 变更摘要
+    total_new = sum(stats.values())
+    summary_path = args.changeset or os.path.join(SCRIPT_DIR, ".changeset.json")
     try:
-        os.makedirs(os.path.dirname(summary_path), exist_ok=True)
         summary = {
-            "total": stats["total_projects"],
-            "categories": {
-                k: v["displayed"] for k, v in stats["categories"].items()
-            },
+            "new_total": total_new,
+            "categories": stats,
+            "db_total": sum(
+                len(v) for v in db.get("categories", {}).values()
+            ),
             "timestamp": now_shanghai(),
         }
-        with open(summary_path, "w", encoding="utf-8") as handle:
-            json.dump(summary, handle, ensure_ascii=False, indent=2)
+        with open(summary_path, "w", encoding="utf-8") as f:
+            json.dump(summary, f, ensure_ascii=False, indent=2)
     except Exception:
-        pass  # 摘要写入失败不影响主流程
+        pass
 
+    print(f"[OK] {total_new} new repos added, {summary.get('db_total', 0)} total in database")
     return 0
 
 

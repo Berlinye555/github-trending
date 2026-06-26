@@ -5,22 +5,6 @@ on:
     # 每天 UTC 0:00（北京时间 8:00）
     - cron: '0 0 * * *'
   workflow_dispatch:
-    inputs:
-      category:
-        description: '指定更新分类（留空=全部）'
-        required: false
-        type: choice
-        options:
-          - ''
-          - '🤖 AI / Agent 项目'
-          - '💹 量化交易与金融'
-          - '🛠️ 开发者工具'
-          - '🆕 本月新星'
-          - '🌏 中文项目热点'
-      query:
-        description: '自定义搜索关键词（覆盖默认 query）'
-        required: false
-        type: string
 
 jobs:
   search-and-update:
@@ -29,14 +13,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Archive current README
-        run: |
-          if [ -f README.md ]; then
-            mkdir -p archive
-            cp README.md "archive/README-$(date +%Y-%m-%d).md"
-            echo "Archived README to archive/README-$(date +%Y-%m-%d).md"
-          fi
 
       - name: Search trending repos
         env:
@@ -47,27 +23,15 @@ jobs:
           ENABLE_AI_DESCRIPTION_REWRITE: ${{ secrets.OPENAI_API_KEY != '' && 'true' || 'false' }}
         run: |
           ARGS="README.md --changeset scripts/.changeset.json"
-          if [ -n "${{ inputs.category }}" ]; then
-            ARGS="$ARGS --category '${{ inputs.category }}'"
-          fi
-          if [ -n "${{ inputs.query }}" ]; then
-            ARGS="$ARGS --query '${{ inputs.query }}'"
-          fi
-          chmod +x scripts/search.py
           python3 scripts/search.py $ARGS
 
       - name: Build commit message
         id: commit_msg
         run: |
           if [ -f scripts/.changeset.json ]; then
-            TOTAL=$(python3 -c "import json; d=json.load(open('scripts/.changeset.json')); print(d['total'])")
-            CATS=$(python3 -c "
-      import json
-      d=json.load(open('scripts/.changeset.json'))
-      parts=[f\"{k.split(chr(32))[0]}:{v}\" for k,v in d['categories'].items()]
-      print(', '.join(parts))
-      ")
-            echo "message=chore: update trending repos — ${TOTAL} projects (${CATS})" >> $GITHUB_OUTPUT
+            NEW=$(python3 -c "import json; d=json.load(open('scripts/.changeset.json')); print(d['new_total'])")
+            DB=$(python3 -c "import json; d=json.load(open('scripts/.changeset.json')); print(d['db_total'])")
+            echo "message=chore: +${NEW} new repos — ${DB} total in database" >> $GITHUB_OUTPUT
           else
             echo "message=chore: update trending repos $(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
           fi
@@ -76,6 +40,6 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add README.md archive/
+          git add README.md scripts/repos.json
           git diff --staged --quiet || git commit -m "${{ steps.commit_msg.outputs.message }}"
           git push
