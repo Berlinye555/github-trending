@@ -1,12 +1,12 @@
 # 🔥 GitHub 热门项目日报
 
-> 🕒 更新：2026-06-29 12:25 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
+> 🕒 更新：2026-06-30 12:04 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
 
 ## 📋 项目总览
 
 | 分类 | 说明 | 搜索关键词 | Stars | 时间 | 已收录 |
 |------|------|-----------|-------|------|------|
-| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 26 |
+| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 27 |
 | 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 30 |
 | 📹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | 21 |
 | 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | 10 |
@@ -43,6 +43,7 @@
 | 17584 | [TransformerOptimus/SuperAGI](https://github.com/TransformerOptimus/SuperAGI) | 多智能体协作与编排Python框架 | Python | 2026-06-26 |
 | 17279 | [camel-ai/camel](https://github.com/camel-ai/camel) | 多智能体协作与编排Python框架 | Python | 2026-06-26 |
 | 16148 | [raga-ai-hub/RagaAI-Catalyst](https://github.com/raga-ai-hub/RagaAI-Catalyst) | 多智能体协作与编排Python框架 | Python | 2026-06-26 |
+| 14799 | [wasp-lang/open-saas](https://github.com/wasp-lang/open-saas) | 大语言模型TypeScript工具与框架 | TypeScript | 2026-06-30 |
 
 ### 🌏 中文项目热点
 

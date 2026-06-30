@@ -1,5 +1,5 @@
 {
-  "updated": "2026-06-29 12:25",
+  "updated": "2026-06-30 12:04",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -209,6 +209,14 @@
         "language": "Python",
         "updated_at": "2026-06-26",
         "added": "2026-06-26"
+      },
+      {
+        "full_name": "wasp-lang/open-saas",
+        "stars": 14799,
+        "description": "大语言模型TypeScript工具与框架",
+        "language": "TypeScript",
+        "updated_at": "2026-06-30",
+        "added": "2026-06-30"
       }
     ],
     "🌏 中文项目热点": [
