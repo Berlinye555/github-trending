@@ -1,6 +1,6 @@
 # 🔥 GitHub 热门项目日报
 
-> 🕒 更新：2026-07-02 12:00 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
+> 🕒 更新：2026-07-03 11:44 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
 
 ## 📋 项目总览
 
@@ -9,7 +9,7 @@
 | 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 27 |
 | 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 30 |
 | 📹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | 21 |
-| 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | 10 |
+| 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | 11 |
 
 ---
 
@@ -120,6 +120,7 @@
 | 59432 | [sharkdp/bat](https://github.com/sharkdp/bat) | 命令行终端Rust效率工具 | Rust | 2026-06-26 |
 | 54251 | [wagoodman/dive](https://github.com/wagoodman/dive) | 命令行终端Go效率工具 | Go | 2026-06-26 |
 | 46092 | [LeCoupa/awesome-cheatsheets](https://github.com/LeCoupa/awesome-cheatsheets) | JavaScript开发框架与库 | JavaScript | 2026-06-26 |
+| 47825 | [hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code) | AI 智能体自动化Python应用 | Python | 2026-07-03 |
 
 ---
 

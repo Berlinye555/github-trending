@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-02 12:00",
+  "updated": "2026-07-03 11:44",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -711,6 +711,14 @@
         "language": "JavaScript",
         "updated_at": "2026-06-26",
         "added": "2026-06-26"
+      },
+      {
+        "full_name": "hesreallyhim/awesome-claude-code",
+        "stars": 47825,
+        "description": "AI 智能体自动化Python应用",
+        "language": "Python",
+        "updated_at": "2026-07-03",
+        "added": "2026-07-03"
       }
     ]
   }
