@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-04 11:37",
+  "updated": "2026-07-05 11:55",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -629,6 +629,14 @@
         "language": "Python",
         "updated_at": "2026-06-26",
         "added": "2026-06-26"
+      },
+      {
+        "full_name": "HKUDS/Vibe-Trading",
+        "stars": 17800,
+        "description": "LLM 驱动的智能交易 Agent ——Python项目",
+        "language": "Python",
+        "updated_at": "2026-07-05",
+        "added": "2026-07-05"
       }
     ],
     "🛠️ 开发者工具": [

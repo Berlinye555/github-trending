@@ -1,6 +1,6 @@
 # 🔥 GitHub 热门项目日报
 
-> 🕒 更新：2026-07-04 11:37 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
+> 🕒 更新：2026-07-05 11:55 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
 
 ## 📋 项目总览
 
@@ -8,7 +8,7 @@
 |------|------|-----------|-------|------|------|
 | 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 27 |
 | 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 30 |
-| 📹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | 21 |
+| 📹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | 22 |
 | 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | 11 |
 
 ---
@@ -105,6 +105,7 @@
 | 19105 | [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) | AI 智能体自动化Python应用 | Python | 2026-06-26 |
 | 18986 | [hummingbot/hummingbot](https://github.com/hummingbot/hummingbot) | RAG 检索增强生成Python方案 | Python | 2026-06-26 |
 | 17609 | [bbfamily/abu](https://github.com/bbfamily/abu) | 阿布量化交易系统(股票，期权，期货，比特币，机器学习) 基于python的开源量化交易，量化投资架构 | Python | 2026-06-26 |
+| 17800 | [HKUDS/Vibe-Trading](https://github.com/HKUDS/Vibe-Trading) | LLM 驱动的智能交易 Agent ——Python项目 | Python | 2026-07-05 |
 
 ### 🛠️ 开发者工具
 
