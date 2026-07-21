@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-20 11:36",
+  "updated": "2026-07-21 11:17",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -735,6 +735,14 @@
         "language": "Python",
         "updated_at": "2026-07-03",
         "added": "2026-07-03"
+      },
+      {
+        "full_name": "langgenius/dify",
+        "stars": 149541,
+        "description": "AI 智能体自动化TypeScript应用",
+        "language": "TypeScript",
+        "updated_at": "2026-07-21",
+        "added": "2026-07-21"
       }
     ]
   }
