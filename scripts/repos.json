@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-05 10:52",
+  "updated": "2026-08-06 10:55",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -751,6 +751,14 @@
         "language": "TypeScript",
         "updated_at": "2026-07-21",
         "added": "2026-07-21"
+      },
+      {
+        "full_name": "usestrix/strix",
+        "stars": 49007,
+        "description": "大语言模型Python工具与框架",
+        "language": "Python",
+        "updated_at": "2026-08-06",
+        "added": "2026-08-06"
       }
     ]
   }
