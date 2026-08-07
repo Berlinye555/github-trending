@@ -1,12 +1,12 @@
 # 🔥 GitHub 热门项目日报
 
-> 🕒 更新：2026-08-06 10:55 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
+> 🕒 更新：2026-08-07 10:52 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
 
 ## 📋 项目总览
 
 | 分类 | 说明 | 搜索关键词 | Stars | 时间 | 已收录 |
 |------|------|-----------|-------|------|------|
-| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 29 |
+| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 30 |
 | 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 30 |
 | 📹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | 22 |
 | 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | 13 |
@@ -46,6 +46,7 @@
 | 14799 | [wasp-lang/open-saas](https://github.com/wasp-lang/open-saas) | 大语言模型TypeScript工具与框架 | TypeScript | 2026-06-30 |
 | 15737 | [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search) | TypeScript开发框架与库 | TypeScript | 2026-07-09 |
 | 46314 | [HKUDS/nanobot](https://github.com/HKUDS/nanobot) | 多智能体协作与编排Python框架 | Python | 2026-07-28 |
+| 16532 | [TencentCloud/TencentDB-Agent-Memory](https://github.com/TencentCloud/TencentDB-Agent-Memory) | AI 智能体自动化TypeScript应用 | TypeScript | 2026-08-07 |
 
 ### 🌏 中文项目热点
 

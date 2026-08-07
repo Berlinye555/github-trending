@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-06 10:55",
+  "updated": "2026-08-07 10:52",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -233,6 +233,14 @@
         "language": "Python",
         "updated_at": "2026-07-28",
         "added": "2026-07-28"
+      },
+      {
+        "full_name": "TencentCloud/TencentDB-Agent-Memory",
+        "stars": 16532,
+        "description": "AI 智能体自动化TypeScript应用",
+        "language": "TypeScript",
+        "updated_at": "2026-08-07",
+        "added": "2026-08-07"
       }
     ],
     "🌏 中文项目热点": [
