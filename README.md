@@ -1,13 +1,13 @@
 # 🔥 GitHub 热门项目日报
 
-> 🕒 更新：2026-08-08 09:56 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
+> 🕒 更新：2026-08-09 10:04 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
 
 ## 📋 项目总览
 
 | 分类 | 说明 | 搜索关键词 | Stars | 时间 | 已收录 |
 |------|------|-----------|-------|------|------|
 | 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 30 |
-| 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 30 |
+| 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 31 |
 | 📹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | 22 |
 | 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | 13 |
 
@@ -82,6 +82,7 @@
 | 21523 | [1Panel-dev/MaxKB](https://github.com/1Panel-dev/MaxKB) | 🔥 MaxKB is an open-source platform for building enterprise-grade agents.  强大易用的开 | Python | 2026-06-26 |
 | 20626 | [Dujltqzv/Some-Many-Books](https://github.com/Dujltqzv/Some-Many-Books) | 个人收藏书籍列表　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　 | - | 2026-06-26 |
 | 19157 | [YunaiV/yudao-cloud](https://github.com/YunaiV/yudao-cloud) | ruoyi-vue-pro 全新 Cloud 版本，优化重构所有功能。基于 Spring Cloud Alibaba + MyBatis Plus + Vue  | Java | 2026-06-26 |
+| 45678 | [siyuan-note/siyuan](https://github.com/siyuan-note/siyuan) | An open-source, privacy-first, self-hosted knowledge workspace where humans and  | TypeScript | 2026-08-09 |
 
 ### 📹 量化交易与金融
 
