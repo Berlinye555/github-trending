@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-23 09:41",
+  "updated": "2026-08-24 09:39",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -783,6 +783,14 @@
         "language": "Python",
         "updated_at": "2026-08-06",
         "added": "2026-08-06"
+      },
+      {
+        "full_name": "calesthio/OpenMontage",
+        "stars": 49807,
+        "description": "AI 智能体自动化Python应用",
+        "language": "Python",
+        "updated_at": "2026-08-24",
+        "added": "2026-08-24"
       }
     ]
   }
