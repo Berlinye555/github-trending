@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-31 12:48",
+  "updated": "2026-09-01 12:27",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -241,6 +241,14 @@
         "language": "TypeScript",
         "updated_at": "2026-08-07",
         "added": "2026-08-07"
+      },
+      {
+        "full_name": "The-Vibe-Company/Quivr",
+        "stars": 39438,
+        "description": "大语言模型Python工具与框架",
+        "language": "Python",
+        "updated_at": "2026-09-01",
+        "added": "2026-09-01"
       }
     ],
     "🌏 中文项目热点": [
