@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-11 11:57",
+  "updated": "2026-09-12 11:58",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -257,6 +257,14 @@
         "language": "Python",
         "updated_at": "2026-09-02",
         "added": "2026-09-02"
+      },
+      {
+        "full_name": "run-llama/llama_index",
+        "stars": 52128,
+        "description": "多智能体协作与编排Python框架",
+        "language": "Python",
+        "updated_at": "2026-09-12",
+        "added": "2026-09-12"
       }
     ],
     "🌏 中文项目热点": [
