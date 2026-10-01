@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-30 12:55",
+  "updated": "2026-10-01 13:09",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -701,6 +701,14 @@
         "language": "Python",
         "updated_at": "2026-07-05",
         "added": "2026-07-05"
+      },
+      {
+        "full_name": "openbq-org/OpenBB",
+        "stars": 73707,
+        "description": "AI 智能体自动化Python应用",
+        "language": "Python",
+        "updated_at": "2026-10-01",
+        "added": "2026-10-01"
       }
     ],
     "🛠️ 开发者工具": [
