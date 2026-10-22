@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21 12:04",
+  "updated": "2026-10-22 12:05",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -273,6 +273,14 @@
         "language": "HTML",
         "updated_at": "2026-10-19",
         "added": "2026-10-19"
+      },
+      {
+        "full_name": "ai-job-search-dev/ai-job-search",
+        "stars": 63025,
+        "description": "Python开发框架与库",
+        "language": "Python",
+        "updated_at": "2026-10-22",
+        "added": "2026-10-22"
       }
     ],
     "🌏 中文项目热点": [
@@ -531,6 +539,14 @@
         "language": "Shell",
         "updated_at": "2026-08-19",
         "added": "2026-08-19"
+      },
+      {
+        "full_name": "liyupi/ai-guide",
+        "stars": 21487,
+        "description": "程序员鱼皮的 AI 资源大全 + Vibe Coding 零基础教程，分享 OpenClaw 保姆级教程、大模型玩法（DeepSeek / GPT / Gemini / Claude / GLM）、最新 AI 资讯、Prompt 提示词大全、AI 知识百科（Agent Skills / RAG / MCP / A2A）、AI 编程教程（Harness Engineering）、AI 工具用法（Cursor / Claude Code / TRAE / Codex / Copilot）、AI 开发框架教程（Spring AI / LangChain）、AI 产品变现指南，帮你快速掌握 AI 技术，走在时代前沿。本项目为开源文档 aiguide，已升级为鱼皮 AI 导航网站",
+        "language": "JavaScript",
+        "updated_at": "2026-10-22",
+        "added": "2026-10-22"
       }
     ],
     "📹 量化交易与金融": [

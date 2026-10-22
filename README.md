@@ -1,13 +1,13 @@
 # 🔥 GitHub 热门项目日报
 
-> 🕒 更新：2026-10-21 12:04 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
+> 🕒 更新：2026-10-22 12:05 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
 
 ## 📋 项目总览
 
 | 分类 | 说明 | 搜索关键词 | Stars | 时间 | 已收录 |
 |------|------|-----------|-------|------|------|
-| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 34 |
-| 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 32 |
+| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 35 |
+| 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 33 |
 | 📹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | 23 |
 | 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | 14 |
 
@@ -51,6 +51,7 @@
 | 39451 | [The-Vibe-Company/quivr](https://github.com/The-Vibe-Company/quivr) | 大语言模型Python工具与框架 | Python | 2026-09-02 |
 | 52128 | [run-llama/llama_index](https://github.com/run-llama/llama_index) | 多智能体协作与编排Python框架 | Python | 2026-09-12 |
 | 16785 | [xbtlin/ai-berkshire](https://github.com/xbtlin/ai-berkshire) | AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。\|  | HTML | 2026-10-19 |
+| 63025 | [ai-job-search-dev/ai-job-search](https://github.com/ai-job-search-dev/ai-job-search) | Python开发框架与库 | Python | 2026-10-22 |
 
 ### 🌏 中文项目热点
 
@@ -88,6 +89,7 @@
 | 19157 | [YunaiV/yudao-cloud](https://github.com/YunaiV/yudao-cloud) | ruoyi-vue-pro 全新 Cloud 版本，优化重构所有功能。基于 Spring Cloud Alibaba + MyBatis Plus + Vue  | Java | 2026-06-26 |
 | 45678 | [siyuan-note/siyuan](https://github.com/siyuan-note/siyuan) | An open-source, privacy-first, self-hosted knowledge workspace where humans and  | TypeScript | 2026-08-09 |
 | 19580 | [jnMetaCode/agency-agents-zh](https://github.com/jnMetaCode/agency-agents-zh) | 🎭 267 个即插即用的 AI 专家角色 — 支持 Hermes Agent/Claude Code/Cursor/Copilot 等 18 种工具，覆盖工程/ | Shell | 2026-08-19 |
+| 21487 | [liyupi/ai-guide](https://github.com/liyupi/ai-guide) | 程序员鱼皮的 AI 资源大全 + Vibe Coding 零基础教程，分享 OpenClaw 保姆级教程、大模型玩法（DeepSeek / GPT / Gemi | JavaScript | 2026-10-22 |
 
 ### 📹 量化交易与金融
 
