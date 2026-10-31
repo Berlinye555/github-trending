@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-30 13:08",
+  "updated": "2026-10-31 12:54",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -281,6 +281,14 @@
         "language": "Python",
         "updated_at": "2026-10-22",
         "added": "2026-10-22"
+      },
+      {
+        "full_name": "pipecat-ai/pipecat",
+        "stars": 16955,
+        "description": "Python开发框架与库",
+        "language": "Python",
+        "updated_at": "2026-10-31",
+        "added": "2026-10-31"
       }
     ],
     "🌏 中文项目热点": [

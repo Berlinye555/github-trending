@@ -1,12 +1,12 @@
 # 🔥 GitHub 热门项目日报
 
-> 🕒 更新：2026-10-30 13:08 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
+> 🕒 更新：2026-10-31 12:54 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
 
 ## 📋 项目总览
 
 | 分类 | 说明 | 搜索关键词 | Stars | 时间 | 已收录 |
 |------|------|-----------|-------|------|------|
-| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 35 |
+| 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 36 |
 | 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 33 |
 | 📹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | 23 |
 | 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | 14 |
@@ -52,6 +52,7 @@
 | 52128 | [run-llama/llama_index](https://github.com/run-llama/llama_index) | 多智能体协作与编排Python框架 | Python | 2026-09-12 |
 | 16785 | [xbtlin/ai-berkshire](https://github.com/xbtlin/ai-berkshire) | AI 时代的伯克希尔：基于 Claude Code / Codex 的价值投资研究框架。巴菲特·芒格·段永平·李录四大师方法论 + 多Agent并行研究。\|  | HTML | 2026-10-19 |
 | 63025 | [ai-job-search-dev/ai-job-search](https://github.com/ai-job-search-dev/ai-job-search) | Python开发框架与库 | Python | 2026-10-22 |
+| 16955 | [pipecat-ai/pipecat](https://github.com/pipecat-ai/pipecat) | Python开发框架与库 | Python | 2026-10-31 |
 
 ### 🌏 中文项目热点
 
