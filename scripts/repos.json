@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-15 13:44",
+  "updated": "2026-11-16 13:44",
   "categories": {
     "🤖 AI / Agent 项目": [
       {
@@ -863,6 +863,14 @@
         "language": "Python",
         "updated_at": "2026-11-08",
         "added": "2026-11-08"
+      },
+      {
+        "full_name": "alibaba/open-code-review",
+        "stars": 52334,
+        "description": "AI 智能体自动化Go应用",
+        "language": "Go",
+        "updated_at": "2026-11-16",
+        "added": "2026-11-16"
       }
     ]
   }
