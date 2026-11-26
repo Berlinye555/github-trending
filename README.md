@@ -1,13 +1,13 @@
 # 🔥 GitHub 热门项目日报
 
-> 🕒 更新：2026-11-25 15:50 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
+> 🕒 更新：2026-11-26 15:41 CST  |  AI / Agent · 中文热点 · 量化交易 · 开发者工具  |  按 Stars 排序
 
 ## 📋 项目总览
 
 | 分类 | 说明 | 搜索关键词 | Stars | 时间 | 已收录 |
 |------|------|-----------|-------|------|------|
 | 🤖 AI / Agent 项目 | AI 应用与 LLM 框架全覆盖 | ai agent OR llm framework | >10 | 不限 | 36 |
-| 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 33 |
+| 🌏 中文项目热点 | 中文社区高热项目 | 人工智能 OR 开源项目 OR 大模型 OR 智能 | >5 | 不限 | 34 |
 | 📹 量化交易与金融 | 量化策略、金融数据、回测 | trading OR finance OR quant | >5 | 不限 | 23 |
 | 🛠️ 开发者工具 | CLI、效率工具、开发辅助 | cli OR dev tool | >10 | 不限 | 16 |
 
@@ -91,6 +91,7 @@
 | 45678 | [siyuan-note/siyuan](https://github.com/siyuan-note/siyuan) | An open-source, privacy-first, self-hosted knowledge workspace where humans and  | TypeScript | 2026-08-09 |
 | 19580 | [jnMetaCode/agency-agents-zh](https://github.com/jnMetaCode/agency-agents-zh) | 🎭 267 个即插即用的 AI 专家角色 — 支持 Hermes Agent/Claude Code/Cursor/Copilot 等 18 种工具，覆盖工程/ | Shell | 2026-08-19 |
 | 21487 | [liyupi/ai-guide](https://github.com/liyupi/ai-guide) | 程序员鱼皮的 AI 资源大全 + Vibe Coding 零基础教程，分享 OpenClaw 保姆级教程、大模型玩法（DeepSeek / GPT / Gemi | JavaScript | 2026-10-22 |
+| 22869 | [HBAI-Ltd/Toonflow-app](https://github.com/HBAI-Ltd/Toonflow-app) | 短剧、漫剧制作工具 Toonflow：开源 AI 视频创作平台，集成剧本创作、智能分镜、角色与场景资产管理、图像生成和视频生成。融合无限画布、AI Agent  | TypeScript | 2026-11-26 |
 
 ### 📹 量化交易与金融
 
